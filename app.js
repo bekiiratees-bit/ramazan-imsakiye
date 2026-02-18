@@ -224,20 +224,19 @@ function updateDisplay() {
 // ==========================================================
 // BAYRAM NAMAZI
 // ==========================================================
+// Bayram Namazı: always visible for selected city (Target: March 20)
 function updateBayramNamazi(now) {
     const bayramEl = document.getElementById('bayramNamazi');
     const bayramTime = document.getElementById('bayramNamaziTime');
     if (!bayramEl || !bayramTime) return;
+    if (!prayerTimings) return;
 
-    const isBayram = now >= RAMADAN_END && now < BAYRAM_END;
-    if (!isBayram || !prayerTimings) {
-        bayramEl.style.display = 'none';
-        return;
-    }
+    // Find the first day of Bayram (March 20, 2026)
+    // RAMADAN_END is March 20 (Bayram 1. Day)
+    const bayramDate = new Date(2026, 2, 20);
+    const key = dateKey(bayramDate);
+    const bayramDay = prayerTimings.find(d => d.date && d.date.startsWith(key));
 
-    // Find bayram day's data to calculate sunrise
-    const bayramStr = dateKey(now);
-    const bayramDay = prayerTimings.find(d => d.date && d.date.startsWith(bayramStr));
     if (!bayramDay || !bayramDay.sun) {
         bayramEl.style.display = 'none';
         return;
@@ -248,6 +247,7 @@ function updateBayramNamazi(now) {
     const totalMin = sH * 60 + sM + 45;
     const bH = Math.floor(totalMin / 60);
     const bM = totalMin % 60;
+
     bayramTime.textContent = `${String(bH).padStart(2, '0')}:${String(bM).padStart(2, '0')}`;
     bayramEl.style.display = 'flex';
 }
@@ -304,6 +304,7 @@ function updateFastingDuration(today) {
     const startEl = document.getElementById('fastingStart');
     const endEl = document.getElementById('fastingEnd');
     const pctEl = document.getElementById('fastingPct');
+    const ringEl = document.getElementById('fastingRing');
 
     if (!today.fajr || !today.maghrib) { bar.style.display = 'none'; return; }
     bar.style.display = 'block';
@@ -321,18 +322,21 @@ function updateFastingDuration(today) {
     const nowMin = now.getHours() * 60 + now.getMinutes();
     const fStart = fH * 60 + fM;
     const fEnd = mH * 60 + mM;
+    const circumference = 263.9; // 2 * PI * 42
     let pct = 0;
+
     if (nowMin >= fStart && nowMin <= fEnd) {
         pct = Math.round(((nowMin - fStart) / (fEnd - fStart)) * 100);
-        fill.style.width = pct + '%';
     } else if (nowMin > fEnd) {
         pct = 100;
-        fill.style.width = '100%';
-    } else {
-        pct = 0;
-        fill.style.width = '0%';
     }
+
+    if (fill) fill.style.width = pct + '%';
     if (pctEl) pctEl.textContent = `%${pct}`;
+    if (ringEl) {
+        const offset = circumference - (circumference * pct / 100);
+        ringEl.style.strokeDashoffset = offset;
+    }
 }
 
 // ==========================================================
@@ -482,7 +486,7 @@ function renderTable(days) {
         const dt = new Date(d.date);
         const isToday = d.date.startsWith(todayStr);
         const dayOfRamadan = Math.floor((dt - RAMADAN_START) / 86400000) + 1;
-        const isKadir = dayOfRamadan === KADIR_NIGHT;
+        const isKadir = dt.getDate() === KADIR_NIGHT_DATE.getDate() && dt.getMonth() === KADIR_NIGHT_DATE.getMonth();
 
         const tr = document.createElement('tr');
         if (isToday) tr.className = 'today-row';

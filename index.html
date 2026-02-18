@@ -140,19 +140,30 @@
                     </div>
                 </div>
 
-                <!-- Fasting Duration -->
-                <div class="fasting-bar glass-card" id="fastingBar">
-                    <div class="fasting-header">
-                        <span><i class="ri-time-line"></i> Oruç Süresi</span>
-                        <span id="fastingDuration">--</span>
+                <!-- Fasting Duration — Modern Card -->
+                <div class="fasting-card glass-card" id="fastingBar">
+                    <div class="fasting-ring-row">
+                        <div class="fasting-ring-wrap">
+                            <svg class="fasting-ring" viewBox="0 0 100 100">
+                                <circle class="fasting-ring-bg" cx="50" cy="50" r="42" />
+                                <circle class="fasting-ring-fill" id="fastingRing" cx="50" cy="50" r="42"
+                                    stroke-dasharray="263.9" stroke-dashoffset="263.9" />
+                            </svg>
+                            <div class="fasting-ring-text">
+                                <span class="fasting-pct" id="fastingPct">%0</span>
+                            </div>
+                        </div>
+                        <div class="fasting-info">
+                            <div class="fasting-title"><i class="ri-moon-clear-line"></i> Oruç Süresi</div>
+                            <div class="fasting-dur" id="fastingDuration">--</div>
+                            <div class="fasting-times">
+                                <span><i class="ri-arrow-up-circle-line"></i> <span id="fastingStart">İmsak</span></span>
+                                <span><i class="ri-arrow-down-circle-line"></i> <span id="fastingEnd">İftar</span></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="fasting-track">
-                        <div class="fasting-fill" id="fastingFill"></div>
-                        <span class="fasting-pct-badge" id="fastingPct">%0</span>
-                    </div>
-                    <div class="fasting-labels">
-                        <span id="fastingStart">İmsak</span>
-                        <span id="fastingEnd">İftar</span>
+                    <div class="fasting-bar-track">
+                        <div class="fasting-bar-fill" id="fastingFill"></div>
                     </div>
                 </div>
 
@@ -218,6 +229,20 @@
                     <p class="verse-arabic" id="verseArabic"></p>
                     <p class="verse-text" id="verseText"></p>
                     <span class="verse-source" id="verseSource"></span>
+                </div>
+
+                <!-- Sahur & İftar Duaları -->
+                <div class="dua-section">
+                    <div class="dua-card glass-card">
+                        <div class="dua-badge sahur"><i class="ri-moon-clear-line"></i> SAHUR DUASI</div>
+                        <p class="dua-arabic">نَوَيْتُ أَنْ أَصُومَ غَدًا مِنْ شَهْرِ رَمَضَانَ الْمُبَارَكِ فَرْضًا لَكَ يَا اللهُ فَتَقَبَّلْ مِنِّي إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ</p>
+                        <p class="dua-turkish">Niyet ettim Allah rızası için yarın Ramazan-ı Şerif orucunu tutmaya.</p>
+                    </div>
+                    <div class="dua-card glass-card">
+                        <div class="dua-badge iftar"><i class="ri-sun-foggy-line"></i> İFTAR DUASI</div>
+                        <p class="dua-arabic">اَللّٰهُمَّ لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ وَعَلٰى رِزْقِكَ أَفْطَرْتُ</p>
+                        <p class="dua-turkish">Allah'ım! Senin rızan için oruç tuttum, sana inandım, sana güvendim ve senin rızkınla orucumu açtım.</p>
+                    </div>
                 </div>
             </div>
 
@@ -388,19 +413,14 @@
                         <canvas id="gameCanvas"></canvas>
                         <div class="game-overlay" id="gameOverlay">
                             <div class="game-overlay-content">
-                                <div class="game-overlay-icon">🎮</div>
-                                <h2 id="gameOverTitle">Çizgi Üzerinde Top</h2>
-                                <p id="gameOverMsg">Topu çizgide tut, düşürme!</p>
+                                <div class="game-overlay-icon">⭐</div>
+                                <h2 id="gameOverTitle">Yıldız Kaçış</h2>
+                                <p id="gameOverMsg">Düşen yıldızlardan kaç!</p>
                                 <p class="game-final-score" id="gameFinalScore"></p>
                                 <button class="game-start-btn" id="gameStartBtn">BAŞLA</button>
-                                <p class="game-hint">Dokunarak zıpla · Zamanlama her şey!</p>
+                                <p class="game-hint">← Sola / Sağa → kaydır</p>
                             </div>
                         </div>
-                    </div>
-                    <div class="game-tips glass-card">
-                        <p>👆 <strong>Kısa dokun</strong> → küçük zıplama</p>
-                        <p>👆 <strong>Uzun dokun</strong> → yüksek zıplama</p>
-                        <p>⚠️ <strong>Çok dokunma</strong> → top savrulur</p>
                     </div>
                 </div>
             </div>
@@ -435,8 +455,10 @@
                 </div>
             </div>
 
+            <footer class="app-footer">License: BekirAtes</footer>
         </div><!-- /content-area -->
 
+        
         <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
             <button class="nav-item active" data-page="home"><i
@@ -461,7 +483,7 @@
 
     </div><!-- /app-wrapper -->
 
-    <script src="embedded_data.js"></script>
+        <script src="embedded_data.js"></script>
     <script src="game.js"></script>
     <script src="app.js"></script>
 </body>

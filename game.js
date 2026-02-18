@@ -1,424 +1,384 @@
-// ===========================================================
-// ÇİZGİ ÜZERİNDE TOP — Minimal Arcade Game
-// Ball stays at FIXED horizontal position, jumps vertically.
-// Line moves between LEFT – CENTER – RIGHT.
-// Player must time jumps to land on the moving line.
-// ===========================================================
+// ==========================================================
+// YILDIZ KAÇIŞ — Falling Stars Dodge Game
+// Minimalist arcade: dodge falling stars by swiping left/right
+// ==========================================================
+
 (function () {
     'use strict';
 
-    // === LEVEL CONFIG ===
-    const LEVEL_THRESHOLDS = [0, 6, 14, 24, 36, 48, 60, 74, 88, 100];
+    // ---- DOM ----
+    const canvas = document.getElementById('gameCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const overlay = document.getElementById('gameOverlay');
+    const startBtn = document.getElementById('gameStartBtn');
+    const scoreEl = document.getElementById('gameScore');
+    const levelEl = document.getElementById('gameLevel');
+    const highEl = document.getElementById('gameHigh');
+    const titleEl = document.getElementById('gameOverTitle');
+    const msgEl = document.getElementById('gameOverMsg');
+    const finalEl = document.getElementById('gameFinalScore');
+
+    // ---- CONSTANTS ----
+    const PLAYER_W = 28;
+    const PLAYER_H = 28;
+    const STAR_SIZE = 14;
+    const PLAYER_Y_OFFSET = 60; // from bottom
+    const SPEED_BASE = 2;
+    const SPAWN_INTERVAL_BASE = 800; // ms
+    const LEVEL_UP_SCORE = 15; // score per level
     const MAX_LEVEL = 10;
 
-    function getLevelConfig(level) {
-        const l = Math.min(level, MAX_LEVEL);
+    // ---- STATE ----
+    let W, H;
+    let running = false;
+    let animId = null;
+    let score = 0;
+    let level = 1;
+    let highScore = parseInt(localStorage.getItem('starDodge_high') || '0');
+    let playerX = 0;
+    let stars = [];
+    let particles = [];
+    let lastSpawn = 0;
+    let touchStartX = null;
+    let playerTargetX = 0;
+    let gameTime = 0;
+
+    // ---- LEVEL CONFIG ----
+    function getLevel() {
         return {
-            gravity: 0.32 + l * 0.018,
-            lineWidth: Math.max(60, 140 - l * 8),
-            shiftInterval: Math.max(600, 2800 - l * 220),
-            jumpForce: -(7.5 + l * 0.1),
+            starSpeed: SPEED_BASE + (level - 1) * 0.5,
+            spawnInterval: Math.max(200, SPAWN_INTERVAL_BASE - (level - 1) * 60),
+            maxStars: 4 + level,
         };
     }
 
-    // === STATE ===
-    let canvas, ctx;
-    let game = null;
-    let animFrame = null;
-    let highScore = parseInt(localStorage.getItem('game_highScore') || '0');
-
-    function getEl(id) { return document.getElementById(id); }
-
-    // === RESIZE ===
-    function resizeCanvas() {
-        if (!canvas) return;
-        const container = canvas.parentElement;
-        canvas.width = container.clientWidth;
-        canvas.height = Math.min(520, window.innerHeight * 0.55);
+    // ---- RESIZE ----
+    function resize() {
+        const wrap = canvas.parentElement;
+        const rect = wrap.getBoundingClientRect();
+        W = canvas.width = rect.width;
+        H = canvas.height = rect.height;
     }
 
-    // === LINE POSITIONS ===
-    function getLinePositions(cw) {
-        return [cw * 0.2, cw * 0.5, cw * 0.8];
+    // ---- PLAYER ----
+    function drawPlayer() {
+        const y = H - PLAYER_Y_OFFSET;
+        const x = playerX;
+
+        // Body (crescent moon figure — Ramazan themed)
+        ctx.save();
+        ctx.translate(x, y);
+
+        // Glow
+        ctx.shadowColor = '#f59e0b';
+        ctx.shadowBlur = 12;
+
+        // Body circle
+        ctx.fillStyle = '#f59e0b';
+        ctx.beginPath();
+        ctx.arc(0, 0, PLAYER_W / 2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Inner circle (crescent effect)
+        ctx.fillStyle = '#1a1a2e';
+        ctx.beginPath();
+        ctx.arc(5, -3, PLAYER_W / 2.8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.shadowBlur = 0;
+        ctx.restore();
     }
 
-    // === CREATE GAME ===
-    function createGame() {
-        resizeCanvas();
-        const cw = canvas.width;
-        const ch = canvas.height;
-        const lineY = ch * 0.72;
-        const positions = getLinePositions(cw);
-
-        return {
-            running: false,
-            score: 0,
-            startTime: 0,
-            level: 1,
-            cw, ch,
-
-            ball: {
-                x: cw / 2,          // FIXED horizontal center
-                y: lineY - 10,
-                vy: 0,
-                radius: 9,
-                trail: [],
-                onLine: true,
-                dead: false,
-                canJump: true,       // No double jump
-            },
-
-            line: {
-                x: positions[1],    // Start at center
-                targetX: positions[1],
-                posIdx: 1,
-                y: lineY,
-                width: 140,
-                positions: positions,
-            },
-
-            config: getLevelConfig(1),
-            lastShift: 0,
-
-            // Touch
-            tapCooldown: 0,
-
-            // Particles
-            particles: [],
-        };
+    // ---- STARS ----
+    function spawnStar() {
+        const conf = getLevel();
+        const x = Math.random() * (W - STAR_SIZE * 2) + STAR_SIZE;
+        const speed = conf.starSpeed * (0.7 + Math.random() * 0.6);
+        const rotation = Math.random() * Math.PI * 2;
+        const rotSpeed = (Math.random() - 0.5) * 0.08;
+        stars.push({ x, y: -STAR_SIZE, speed, rotation, rotSpeed, size: STAR_SIZE * (0.7 + Math.random() * 0.6) });
     }
 
-    // === INPUT ===
-    function onTap(e) {
-        e.preventDefault();
-        if (!game || !game.running) return;
-        const ball = game.ball;
+    function drawStar(s) {
+        ctx.save();
+        ctx.translate(s.x, s.y);
+        ctx.rotate(s.rotation);
 
-        // Must be on line to jump (no double jump)
-        if (!ball.canJump) return;
-
-        // Overjump protection: if tapped too fast, weaker jump
-        const now = performance.now();
-        const timeSinceLastTap = now - game.tapCooldown;
-        let force = game.config.jumpForce;
-
-        if (timeSinceLastTap < 300) {
-            // Tapping too fast → overjump (too high, less control)
-            force *= 1.5;
+        // Star shape
+        ctx.fillStyle = '#fbbf24';
+        ctx.shadowColor = '#fbbf24';
+        ctx.shadowBlur = 8;
+        ctx.beginPath();
+        const spikes = 5;
+        const outerR = s.size;
+        const innerR = s.size * 0.4;
+        for (let i = 0; i < spikes * 2; i++) {
+            const r = i % 2 === 0 ? outerR : innerR;
+            const angle = (Math.PI / spikes) * i - Math.PI / 2;
+            if (i === 0) ctx.moveTo(Math.cos(angle) * r, Math.sin(angle) * r);
+            else ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
         }
+        ctx.closePath();
+        ctx.fill();
 
-        ball.vy = force;
-        ball.onLine = false;
-        ball.canJump = false;
-        game.tapCooldown = now;
+        ctx.shadowBlur = 0;
+        ctx.restore();
     }
 
-    // === LINE SHIFT ===
-    function shiftLine() {
-        const positions = game.line.positions;
-        const current = game.line.posIdx;
-
-        // Move to a different position
-        let next;
-        if (current === 1) {
-            next = Math.random() < 0.5 ? 0 : 2;
-        } else {
-            next = 1; // Always return to center first
-        }
-
-        game.line.posIdx = next;
-        game.line.targetX = positions[next];
-    }
-
-    // === PARTICLES ===
-    function spawnDeathParticles(x, y) {
-        for (let i = 0; i < 24; i++) {
-            game.particles.push({
+    // ---- PARTICLES ----
+    function spawnParticles(x, y) {
+        for (let i = 0; i < 12; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const speed = 1 + Math.random() * 3;
+            particles.push({
                 x, y,
-                vx: (Math.random() - 0.5) * 7,
-                vy: (Math.random() - 0.7) * 7,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
                 life: 1,
-                radius: Math.random() * 3.5 + 1.5,
-                hue: Math.random() > 0.5 ? 35 : 10, // amber or red
+                color: Math.random() > 0.5 ? '#f59e0b' : '#ef4444',
+                size: 2 + Math.random() * 3
             });
         }
     }
 
-    // === UPDATE ===
-    function update() {
-        if (!game.running) return;
-        const { ball, line, config } = game;
-        const cw = game.cw;
-
-        // Score (elapsed time)
-        game.score = (performance.now() - game.startTime) / 1000;
-
-        // Level advancement
-        let newLevel = 1;
-        for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
-            if (game.score >= LEVEL_THRESHOLDS[i]) { newLevel = i + 1; break; }
+    function updateParticles() {
+        for (let i = particles.length - 1; i >= 0; i--) {
+            const p = particles[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.03;
+            if (p.life <= 0) particles.splice(i, 1);
         }
-        if (newLevel !== game.level) {
-            game.level = newLevel;
-            game.config = getLevelConfig(newLevel);
-            line.width = game.config.lineWidth;
+    }
+
+    function drawParticles() {
+        for (const p of particles) {
+            ctx.globalAlpha = p.life;
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+    }
+
+    // ---- COLLISION ----
+    function checkCollision() {
+        const py = H - PLAYER_Y_OFFSET;
+        const pr = PLAYER_W / 2;
+        for (const s of stars) {
+            const dx = s.x - playerX;
+            const dy = s.y - py;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < pr + s.size * 0.6) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    // ---- BACKGROUND ----
+    function drawBackground() {
+        // Dark gradient
+        const grad = ctx.createLinearGradient(0, 0, 0, H);
+        grad.addColorStop(0, '#0a0a1a');
+        grad.addColorStop(1, '#1a1a2e');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, W, H);
+
+        // Subtle ambient dots
+        ctx.fillStyle = 'rgba(255,255,255,0.03)';
+        for (let i = 0; i < 30; i++) {
+            const x = (Math.sin(i * 97 + gameTime * 0.0003) * 0.5 + 0.5) * W;
+            const y = (Math.cos(i * 73 + gameTime * 0.0002) * 0.5 + 0.5) * H;
+            ctx.beginPath();
+            ctx.arc(x, y, 1, 0, Math.PI * 2);
+            ctx.fill();
         }
 
-        // Line shift timer
-        if (performance.now() - game.lastShift > config.shiftInterval) {
-            shiftLine();
-            game.lastShift = performance.now();
+        // Ground line
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, H - 30);
+        ctx.lineTo(W, H - 30);
+        ctx.stroke();
+    }
+
+    // ---- GAME LOOP ----
+    function gameLoop(timestamp) {
+        if (!running) return;
+
+        gameTime = timestamp;
+        const conf = getLevel();
+
+        // Spawn stars
+        if (timestamp - lastSpawn > conf.spawnInterval) {
+            if (stars.length < conf.maxStars) {
+                spawnStar();
+            }
+            lastSpawn = timestamp;
         }
 
-        // Smooth line horizontal transition
-        const dx = line.targetX - line.x;
-        line.x += dx * 0.06;
+        // Move player towards target
+        const dx = playerTargetX - playerX;
+        playerX += dx * 0.15;
 
-        // Ball physics — vertical only
-        ball.vy += config.gravity;
-        ball.y += ball.vy;
+        // Clamp player
+        playerX = Math.max(PLAYER_W / 2, Math.min(W - PLAYER_W / 2, playerX));
 
-        // Ball x is FIXED at center of screen
-        ball.x = cw / 2;
+        // Update stars
+        for (let i = stars.length - 1; i >= 0; i--) {
+            const s = stars[i];
+            s.y += s.speed;
+            s.rotation += s.rotSpeed;
 
-        // Collision: ball landing on line
-        const halfW = line.width / 2;
-        const ballOnLineX = ball.x >= (line.x - halfW) && ball.x <= (line.x + halfW);
+            // Off screen — score
+            if (s.y > H + STAR_SIZE) {
+                stars.splice(i, 1);
+                score++;
+                scoreEl.textContent = score;
 
-        if (ball.vy >= 0 && ball.y >= line.y - ball.radius) {
-            if (ballOnLineX) {
-                // Landed on line!
-                ball.y = line.y - ball.radius;
-                ball.vy = 0;
-                ball.onLine = true;
-                ball.canJump = true;
+                // Level up
+                const newLevel = Math.min(MAX_LEVEL, Math.floor(score / LEVEL_UP_SCORE) + 1);
+                if (newLevel !== level) {
+                    level = newLevel;
+                    levelEl.textContent = level;
+                }
             }
         }
 
-        // Fell past the line
-        if (ball.y > line.y + 80) {
-            die();
+        // Check collision
+        const hit = checkCollision();
+        if (hit) {
+            spawnParticles(hit.x, hit.y);
+            spawnParticles(playerX, H - PLAYER_Y_OFFSET);
+            gameOver();
             return;
         }
 
-        // Trail (subtle)
-        if (!ball.onLine) {
-            ball.trail.push({ x: ball.x, y: ball.y, alpha: 0.5 });
-            if (ball.trail.length > 8) ball.trail.shift();
-        } else {
-            ball.trail = [];
-        }
+        // Update particles
+        updateParticles();
 
-        // Particles
-        game.particles.forEach(p => {
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vy += 0.18;
-            p.life -= 0.022;
-        });
-        game.particles = game.particles.filter(p => p.life > 0);
+        // Draw
+        drawBackground();
+        for (const s of stars) drawStar(s);
+        drawPlayer();
+        drawParticles();
 
-        // Update HUD
-        getEl('gameScore').textContent = Math.floor(game.score);
-        getEl('gameLevel').textContent = game.level;
+        // Score overlay (top center)
+        ctx.fillStyle = 'rgba(255,255,255,0.06)';
+        ctx.font = 'bold 60px Outfit';
+        ctx.textAlign = 'center';
+        ctx.fillText(score, W / 2, H / 2 - 20);
+
+        animId = requestAnimationFrame(gameLoop);
     }
 
-    // === DEATH ===
-    function die() {
-        game.running = false;
-        game.ball.dead = true;
-        spawnDeathParticles(game.ball.x, game.ball.y);
-
-        const finalScore = Math.floor(game.score);
-        const isNewRecord = finalScore > highScore;
-        if (isNewRecord) {
-            highScore = finalScore;
-            localStorage.setItem('game_highScore', String(highScore));
+    // ---- GAME OVER ----
+    function gameOver() {
+        running = false;
+        if (score > highScore) {
+            highScore = score;
+            localStorage.setItem('starDodge_high', highScore);
         }
-        getEl('gameHigh').textContent = highScore;
+        highEl.textContent = highScore;
 
-        // Show game over overlay after brief death animation
-        setTimeout(() => {
-            const overlay = getEl('gameOverlay');
-            overlay.style.display = 'flex';
-            getEl('gameOverTitle').textContent = '💥 Oyun Bitti!';
-            getEl('gameOverMsg').textContent = `Seviye ${game.level} · ${finalScore} saniye`;
-            getEl('gameFinalScore').textContent = isNewRecord ? '🏆 Yeni Rekor!' : `En iyi: ${highScore}s`;
-            getEl('gameStartBtn').textContent = 'TEKRAR OYNA';
-        }, 500);
+        titleEl.textContent = 'Oyun Bitti!';
+        msgEl.textContent = `Seviye ${level} · ${score} yıldız kaçırdın`;
+        finalEl.textContent = score > 0 ? `Skor: ${score}` : '';
+        startBtn.textContent = 'TEKRAR OYNA';
+        overlay.style.display = 'flex';
+
+        // Continue drawing particles briefly
+        let frames = 0;
+        function deathAnim() {
+            if (frames > 40) return;
+            frames++;
+            updateParticles();
+            drawBackground();
+            for (const s of stars) drawStar(s);
+            drawParticles();
+            requestAnimationFrame(deathAnim);
+        }
+        deathAnim();
     }
 
-    // === RENDER ===
-    function render() {
-        if (!ctx) return;
-        const { ball, line, particles, cw, ch } = game;
-
-        // Clear
-        ctx.clearRect(0, 0, cw, ch);
-
-        // Background
-        ctx.fillStyle = '#08090f';
-        ctx.fillRect(0, 0, cw, ch);
-
-        // Subtle grid dots
-        ctx.fillStyle = 'rgba(255,255,255,0.015)';
-        for (let x = 20; x < cw; x += 40) {
-            for (let y = 20; y < ch; y += 40) {
-                ctx.beginPath();
-                ctx.arc(x, y, 1, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
-
-        // Line position markers (ghost lines)
-        const positions = getLinePositions(cw);
-        ctx.strokeStyle = 'rgba(255,255,255,0.03)';
-        ctx.lineWidth = 1;
-        const markerHalf = 40;
-        positions.forEach(px => {
-            ctx.beginPath();
-            ctx.moveTo(px - markerHalf, line.y);
-            ctx.lineTo(px + markerHalf, line.y);
-            ctx.stroke();
-        });
-
-        // Active line
-        const halfW = line.width / 2;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = 'rgba(245,158,11,0.25)';
-        ctx.strokeStyle = 'rgba(245,158,11,0.8)';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(line.x - halfW, line.y);
-        ctx.lineTo(line.x + halfW, line.y);
-        ctx.stroke();
-        ctx.shadowBlur = 0;
-
-        // Line end dots
-        ctx.fillStyle = 'rgba(245,158,11,0.4)';
-        [line.x - halfW, line.x + halfW].forEach(ex => {
-            ctx.beginPath();
-            ctx.arc(ex, line.y, 2.5, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        // Ball trail (motion trail when in air)
-        ball.trail.forEach((t, i) => {
-            const a = (i / ball.trail.length) * 0.2;
-            ctx.fillStyle = `rgba(245,158,11,${a})`;
-            ctx.beginPath();
-            ctx.arc(t.x, t.y, ball.radius * 0.5, 0, Math.PI * 2);
-            ctx.fill();
-        });
-
-        // Ball
-        if (!ball.dead) {
-            ctx.shadowBlur = 14;
-            ctx.shadowColor = 'rgba(245,158,11,0.45)';
-            const grad = ctx.createRadialGradient(
-                ball.x - 2, ball.y - 2, 0,
-                ball.x, ball.y, ball.radius
-            );
-            grad.addColorStop(0, '#fcd34d');
-            grad.addColorStop(1, '#f59e0b');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            // Ball highlight
-            ctx.fillStyle = 'rgba(255,255,255,0.3)';
-            ctx.beginPath();
-            ctx.arc(ball.x - 2, ball.y - 3, ball.radius * 0.35, 0, Math.PI * 2);
-            ctx.fill();
-        }
-
-        // Death particles
-        particles.forEach(p => {
-            ctx.globalAlpha = Math.max(0, p.life);
-            ctx.fillStyle = `hsl(${p.hue}, 90%, 55%)`;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius * p.life, 0, Math.PI * 2);
-            ctx.fill();
-        });
-        ctx.globalAlpha = 1;
-
-        // Level progress bar at bottom
-        if (game.running && game.level < MAX_LEVEL) {
-            const nextT = LEVEL_THRESHOLDS[game.level] || 999;
-            const prevT = LEVEL_THRESHOLDS[game.level - 1] || 0;
-            const pct = Math.min(1, (game.score - prevT) / (nextT - prevT));
-            ctx.fillStyle = 'rgba(245,158,11,0.12)';
-            ctx.fillRect(0, ch - 2, cw * pct, 2);
-        }
-    }
-
-    // === GAME LOOP ===
-    function loop() {
-        update();
-        render();
-
-        if (game.running || game.particles.length > 0) {
-            // Continue rendering death particles
-            if (!game.running && game.particles.length > 0) {
-                game.particles.forEach(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vy += 0.18;
-                    p.life -= 0.022;
-                });
-                game.particles = game.particles.filter(p => p.life > 0);
-            }
-            animFrame = requestAnimationFrame(loop);
-        }
-    }
-
-    // === START GAME ===
+    // ---- START ----
     function startGame() {
-        if (animFrame) cancelAnimationFrame(animFrame);
-        game = createGame();
-        game.running = true;
-        game.startTime = performance.now();
-        game.lastShift = performance.now() + 1500; // Grace period
+        resize();
+        score = 0;
+        level = 1;
+        stars = [];
+        particles = [];
+        lastSpawn = 0;
+        playerX = W / 2;
+        playerTargetX = W / 2;
 
-        getEl('gameOverlay').style.display = 'none';
-        getEl('gameHigh').textContent = highScore;
+        scoreEl.textContent = '0';
+        levelEl.textContent = '1';
+        highEl.textContent = highScore;
+        overlay.style.display = 'none';
 
-        animFrame = requestAnimationFrame(loop);
+        running = true;
+        animId = requestAnimationFrame(gameLoop);
     }
 
-    // === INIT (called from app.js) ===
-    window.initGame = function () {
-        canvas = document.getElementById('gameCanvas');
-        if (!canvas) return;
-        ctx = canvas.getContext('2d');
+    // ---- CONTROLS ----
+    // Touch: drag left/right
+    canvas.addEventListener('touchstart', (e) => {
+        if (!running) return;
+        e.preventDefault();
+        touchStartX = e.touches[0].clientX;
+    }, { passive: false });
 
-        resizeCanvas();
-        getEl('gameHigh').textContent = highScore;
+    canvas.addEventListener('touchmove', (e) => {
+        if (!running) return;
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        const touchX = e.touches[0].clientX - rect.left;
+        playerTargetX = touchX;
+    }, { passive: false });
 
-        // Draw initial idle state
-        game = createGame();
-        render();
+    canvas.addEventListener('touchend', () => {
+        touchStartX = null;
+    });
 
-        // Input handlers
-        canvas.addEventListener('touchstart', onTap, { passive: false });
-        canvas.addEventListener('mousedown', onTap);
-        canvas.addEventListener('contextmenu', e => e.preventDefault());
+    // Mouse fallback
+    canvas.addEventListener('mousemove', (e) => {
+        if (!running) return;
+        const rect = canvas.getBoundingClientRect();
+        playerTargetX = e.clientX - rect.left;
+    });
 
-        // Start button
-        getEl('gameStartBtn').addEventListener('click', startGame);
+    // Click/tap on canvas when overlay hidden starts game
+    canvas.addEventListener('click', () => {
+        if (!running && overlay.style.display === 'none') {
+            startGame();
+        }
+    });
 
-        // Resize handling
-        window.addEventListener('resize', () => {
-            resizeCanvas();
-            if (game) {
-                game.cw = canvas.width;
-                game.ch = canvas.height;
-                game.line.y = canvas.height * 0.72;
-                game.line.positions = getLinePositions(canvas.width);
-                game.ball.x = canvas.width / 2;
-            }
+    // ---- INIT ----
+    function initGame() {
+        resize();
+        highEl.textContent = highScore;
+        startBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            startGame();
         });
-    };
+        window.addEventListener('resize', () => {
+            if (running) resize();
+        });
+
+        // Initial draw
+        drawBackground();
+        ctx.fillStyle = 'rgba(255,255,255,0.04)';
+        ctx.font = 'bold 60px Outfit';
+        ctx.textAlign = 'center';
+        ctx.fillText('⭐', W / 2, H / 2);
+    }
+
+    // Expose
+    window.initGame = initGame;
 })();
