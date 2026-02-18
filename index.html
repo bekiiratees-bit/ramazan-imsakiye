@@ -5,268 +5,464 @@
     <meta charset="UTF-8">
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Ramazan İmsakiyesi 2026 - Diyanet Verileri</title>
-    <meta name="description"
-        content="2026 Ramazan İmsakiyesi - 81 il için Diyanet kaynaklı namaz vakitleri, geri sayım ve günlük ayetler">
+    <title>Ramazan İmsakiyesi 2026</title>
+    <meta name="description" content="81 il için Diyanet kaynaklı namaz vakitleri, ibadet takibi, hatim takipçisi">
     <meta name="theme-color" content="#0a0e1a">
-
-    <!-- PWA -->
-    <link rel="manifest" href="manifest.json">
-
-    <!-- iOS PWA Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="İmsakiye">
-    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
-    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
-
-    <!-- Fonts & Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
     <link
         href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&display=swap"
         rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <!-- Animated Background -->
-    <div class="bg-pattern">
-        <div class="bg-star" style="top:8%;left:12%;animation-delay:0s"></div>
-        <div class="bg-star" style="top:15%;left:75%;animation-delay:1.2s"></div>
-        <div class="bg-star" style="top:32%;left:90%;animation-delay:2.5s"></div>
-        <div class="bg-star" style="top:55%;left:5%;animation-delay:0.8s"></div>
-        <div class="bg-star" style="top:70%;left:60%;animation-delay:3.1s"></div>
-        <div class="bg-star" style="top:85%;left:30%;animation-delay:1.8s"></div>
-        <div class="bg-star" style="top:45%;left:45%;animation-delay:4s"></div>
-        <div class="bg-star" style="top:20%;left:35%;animation-delay:2.2s"></div>
-    </div>
 
-    <div class="app-wrapper">
-        <div class="container">
-
-            <!-- Header -->
-            <header class="app-header">
-                <div class="logo">
-                    <div class="logo-icon-wrap">
-                        <i class="ri-moon-clear-fill"></i>
-                    </div>
-                    <div class="logo-text">
-                        <span class="logo-title">İmsakiye</span>
-                        <span class="logo-subtitle">Ramazan 2026 · Diyanet</span>
-                    </div>
-                </div>
-                <div class="header-actions">
-                    <button class="icon-btn" id="printBtn" aria-label="Yazdır" title="İmsakiyeyi Yazdır">
-                        <i class="ri-printer-line"></i>
-                    </button>
-                    <button class="icon-btn" id="themeToggle" aria-label="Tema Değiştir">
-                        <i class="ri-sun-line" id="themeIcon"></i>
-                    </button>
-                </div>
-            </header>
-
-            <!-- City Selector -->
-            <div class="city-bar glass-panel">
-                <i class="ri-map-pin-2-fill city-pin"></i>
-                <select id="citySelect" class="city-select">
-                    <option value="">İl Seçin...</option>
-                </select>
-                <i class="ri-arrow-down-s-line select-arrow"></i>
+    <!-- ===== SPLASH SCREEN ===== -->
+    <div id="splashScreen" class="splash">
+        <div class="splash-content">
+            <div class="splash-logo">
+                <svg viewBox="0 0 100 100" width="80" height="80">
+                    <defs>
+                        <linearGradient id="splashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#f59e0b" />
+                            <stop offset="100%" style="stop-color:#ef4444" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M50 5 C25 5 5 25 5 50 C5 75 25 95 50 95 C35 85 28 68 28 50 C28 32 35 15 50 5Z"
+                        fill="url(#splashGrad)" class="splash-moon" />
+                    <circle cx="62" cy="22" r="3" fill="#f59e0b" opacity="0.8" class="splash-star s1" />
+                    <circle cx="75" cy="35" r="2" fill="#fbbf24" opacity="0.6" class="splash-star s2" />
+                    <circle cx="70" cy="50" r="2.5" fill="#f59e0b" opacity="0.7" class="splash-star s3" />
+                </svg>
             </div>
-
-            <!-- Ramadan Progress Bar -->
-            <div class="progress-section" id="progressSection">
-                <div class="progress-header">
-                    <span class="progress-label"><i class="ri-moon-clear-line"></i> Ramazan İlerlemesi</span>
-                    <span class="progress-day" id="progressDay">--</span>
-                </div>
-                <div class="progress-track">
-                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                </div>
-                <div class="progress-footer">
-                    <span>1. Gün</span>
-                    <span id="bayramCountdown">Bayrama -- gün</span>
-                    <span>30. Gün</span>
-                </div>
+            <h1 class="splash-title">İmsakiye</h1>
+            <p class="splash-subtitle">RAMAZAN 2026</p>
+            <div class="splash-loader">
+                <div class="splash-loader-bar"></div>
             </div>
-
-            <!-- Date Info -->
-            <div class="date-strip">
-                <div class="date-chip">
-                    <i class="ri-calendar-2-line"></i>
-                    <span id="gregorianDate">--</span>
-                </div>
-                <div class="date-chip">
-                    <i class="ri-ancient-gate-line"></i>
-                    <span id="hijriDate">--</span>
-                </div>
-                <div class="date-chip accent">
-                    <i class="ri-star-s-fill"></i>
-                    <span id="ramadanDay">--</span>
-                </div>
-            </div>
-
-            <!-- Countdown Hero -->
-            <section class="countdown-hero glass-panel">
-                <div class="countdown-badge" id="nextPrayerBadge">
-                    <i class="ri-time-line"></i>
-                    <span id="nextPrayerName">Yükleniyor...</span>
-                </div>
-                <div class="countdown-display">
-                    <div class="countdown-segment">
-                        <span class="countdown-num" id="cdHours">--</span>
-                        <span class="countdown-unit">SAAT</span>
-                    </div>
-                    <span class="countdown-sep">:</span>
-                    <div class="countdown-segment">
-                        <span class="countdown-num" id="cdMinutes">--</span>
-                        <span class="countdown-unit">DAKİKA</span>
-                    </div>
-                    <span class="countdown-sep">:</span>
-                    <div class="countdown-segment">
-                        <span class="countdown-num" id="cdSeconds">--</span>
-                        <span class="countdown-unit">SANİYE</span>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Prayer Times -->
-            <section class="prayer-grid">
-                <div class="prayer-card glass-panel" id="card-fajr">
-                    <div class="card-glow"></div>
-                    <i class="ri-moon-foggy-line card-icon"></i>
-                    <span class="card-label">İMSAK</span>
-                    <span class="card-time" id="time-fajr">--:--</span>
-                </div>
-                <div class="prayer-card glass-panel" id="card-sun">
-                    <div class="card-glow"></div>
-                    <i class="ri-sun-foggy-line card-icon"></i>
-                    <span class="card-label">GÜNEŞ</span>
-                    <span class="card-time" id="time-sun">--:--</span>
-                </div>
-                <div class="prayer-card glass-panel" id="card-dhuhr">
-                    <div class="card-glow"></div>
-                    <i class="ri-sun-fill card-icon"></i>
-                    <span class="card-label">ÖĞLE</span>
-                    <span class="card-time" id="time-dhuhr">--:--</span>
-                </div>
-                <div class="prayer-card glass-panel" id="card-asr">
-                    <div class="card-glow"></div>
-                    <i class="ri-sun-cloudy-line card-icon"></i>
-                    <span class="card-label">İKİNDİ</span>
-                    <span class="card-time" id="time-asr">--:--</span>
-                </div>
-                <div class="prayer-card glass-panel" id="card-maghrib">
-                    <div class="card-glow"></div>
-                    <i class="ri-moon-fill card-icon"></i>
-                    <span class="card-label">AKŞAM</span>
-                    <span class="card-time" id="time-maghrib">--:--</span>
-                </div>
-                <div class="prayer-card glass-panel" id="card-isha">
-                    <div class="card-glow"></div>
-                    <i class="ri-moon-cloudy-line card-icon"></i>
-                    <span class="card-label">YATSI</span>
-                    <span class="card-time" id="time-isha">--:--</span>
-                </div>
-            </section>
-
-            <!-- Multi-Day Table Tabs -->
-            <section class="table-section glass-panel" id="tableSection">
-                <div class="table-header">
-                    <h2 class="table-title"><i class="ri-calendar-schedule-line"></i> Namaz Vakitleri Tablosu</h2>
-                    <div class="tab-bar">
-                        <button class="tab-btn active" data-days="7">Haftalık</button>
-                        <button class="tab-btn" data-days="10">10 Gün</button>
-                        <button class="tab-btn" data-days="30">Aylık</button>
-                    </div>
-                </div>
-                <div class="table-scroll" id="tableScroll">
-                    <table class="prayer-table" id="prayerTable">
-                        <thead>
-                            <tr>
-                                <th>Tarih</th>
-                                <th>İmsak</th>
-                                <th>Güneş</th>
-                                <th>Öğle</th>
-                                <th>İkindi</th>
-                                <th>Akşam</th>
-                                <th>Yatsı</th>
-                            </tr>
-                        </thead>
-                        <tbody id="prayerTableBody"></tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Verse -->
-            <section class="verse-card glass-panel" id="verseSection">
-                <div class="verse-badge">
-                    <i class="ri-book-open-line"></i>
-                    <span>Günün Ayeti</span>
-                </div>
-                <p class="verse-arabic" id="verseArabic"></p>
-                <p class="verse-turkish" id="verseText"></p>
-                <span class="verse-ref" id="verseSource"></span>
-            </section>
-
-            <!-- Sahur & Iftar Dua -->
-            <section class="dua-section">
-                <div class="dua-card glass-panel">
-                    <div class="dua-badge sahur-badge">
-                        <i class="ri-moon-foggy-line"></i>
-                        <span>Sahur Duası</span>
-                    </div>
-                    <p class="dua-arabic">نَوَيْتُ أَنْ أَصُومَ صَوْمَ شَهْرِ رَمَضَانَ مِنَ الْفَجْرِ إِلَى الْمَغْرِبِ
-                        خَالِصًا لِلَّهِ تَعَالَى</p>
-                    <p class="dua-turkish">"Niyet ettim Allah rızası için yarınki Ramazan-ı Şerif orucunu tutmaya."</p>
-                </div>
-                <div class="dua-card glass-panel">
-                    <div class="dua-badge iftar-badge">
-                        <i class="ri-moon-fill"></i>
-                        <span>İftar Duası</span>
-                    </div>
-                    <p class="dua-arabic">اَللَّهُمَّ لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَيْكَ تَوَكَّلْتُ وَعَلَى رِزْقِكَ
-                        أَفْطَرْتُ</p>
-                    <p class="dua-turkish">"Allah'ım! Senin rızan için oruç tuttum, sana inandım, sana tevekkül ettim ve
-                        senin rızkınla orucumu açtım."</p>
-                </div>
-            </section>
-
-            <!-- Tesbih Counter -->
-            <section class="tesbih-section glass-panel" id="tesbihSection">
-                <div class="tesbih-header">
-                    <i class="ri-heart-pulse-line"></i>
-                    <span>Dijital Tesbih</span>
-                </div>
-                <div class="tesbih-display">
-                    <div class="tesbih-counter" id="tesbihCount">0</div>
-                    <div class="tesbih-target" id="tesbihTarget">/ 33</div>
-                </div>
-                <div class="tesbih-label" id="tesbihLabel">سُبْحَانَ اللَّهِ</div>
-                <div class="tesbih-label-tr" id="tesbihLabelTr">SubhanAllah</div>
-                <button class="tesbih-btn" id="tesbihBtn">
-                    <i class="ri-add-circle-line"></i>
-                </button>
-                <div class="tesbih-phases">
-                    <span class="tesbih-phase active" data-phase="0">SubhanAllah</span>
-                    <span class="tesbih-phase" data-phase="1">Elhamdulillah</span>
-                    <span class="tesbih-phase" data-phase="2">Allahuekber</span>
-                </div>
-                <button class="tesbih-reset" id="tesbihReset"><i class="ri-restart-line"></i> Sıfırla</button>
-            </section>
-
-            <!-- Diyanet Source Label -->
-            <div class="source-label">
-                <i class="ri-shield-check-line"></i>
-                Kaynak: Diyanet İşleri Başkanlığı
-            </div>
+            <p class="splash-credit">Diyanet İşleri Başkanlığı Verileri</p>
         </div>
     </div>
 
+    <!-- ===== APP WRAPPER ===== -->
+    <div class="app-wrapper" id="appWrapper">
+
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="logo">
+                <svg viewBox="0 0 40 40" width="36" height="36">
+                    <defs>
+                        <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#f59e0b" />
+                            <stop offset="100%" style="stop-color:#ef4444" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M20 2 C10 2 2 10 2 20 C2 30 10 38 20 38 C14 34 11 27 11 20 C11 13 14 6 20 2Z"
+                        fill="url(#moonGrad)" />
+                </svg>
+                <div><strong>İmsakiye</strong><small>RAMAZAN 2026</small></div>
+            </div>
+            <div class="header-actions">
+                <button id="shareBtn" class="icon-btn" aria-label="Paylaş"><i class="ri-share-line"></i></button>
+                <button id="printBtn" class="icon-btn" aria-label="Yazdır"><i class="ri-printer-line"></i></button>
+                <button id="themeToggle" class="icon-btn" aria-label="Tema"><i id="themeIcon"
+                        class="ri-sun-line"></i></button>
+            </div>
+        </header>
+
+        <!-- CITY SELECT -->
+        <div class="city-select-wrap">
+            <i class="ri-map-pin-fill"></i>
+            <select id="citySelect" aria-label="Şehir Seçin"></select>
+            <i class="ri-arrow-down-s-line"></i>
+        </div>
+
+        <!-- CONTENT AREA -->
+        <div class="content-area" id="contentArea">
+
+            <!-- ===== PAGE: HOME (Vakitler) ===== -->
+            <div class="page active" id="page-home">
+                <!-- Date & Ramadan Info -->
+                <div class="info-row">
+                    <div class="info-chip"><i class="ri-calendar-line"></i> <span id="gregorianDate">--</span></div>
+                    <div class="info-chip highlight"><i class="ri-star-fill"></i> <span id="ramadanDay">--</span></div>
+                </div>
+
+                <!-- Ramadan Progress -->
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span id="progressLabel">Ramazan İlerlemesi</span>
+                        <span id="progressDay">--</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <!-- Countdown — Selectable Prayer Timer -->
+                <div class="countdown-card glass-card">
+                    <div class="cd-selector" id="cdSelector">
+                        <button class="cd-pill active" data-prayer="auto">Otomatik</button>
+                        <button class="cd-pill" data-prayer="fajr">İmsak</button>
+                        <button class="cd-pill" data-prayer="sun">Güneş</button>
+                        <button class="cd-pill" data-prayer="dhuhr">Öğle</button>
+                        <button class="cd-pill" data-prayer="asr">İkindi</button>
+                        <button class="cd-pill" data-prayer="maghrib">Akşam</button>
+                        <button class="cd-pill" data-prayer="isha">Yatsı</button>
+                    </div>
+                    <div class="cd-header">
+                        <span class="cd-icon"><i class="ri-timer-flash-line"></i></span>
+                        <span id="nextPrayerName" class="cd-label">VERİ BULUNAMADI</span>
+                    </div>
+                    <div class="cd-digits">
+                        <div class="cd-block">
+                            <span class="cd-num" id="cdHours">--</span>
+                            <span class="cd-unit">SAAT</span>
+                        </div>
+                        <span class="cd-colon">:</span>
+                        <div class="cd-block">
+                            <span class="cd-num" id="cdMinutes">--</span>
+                            <span class="cd-unit">DAKİKA</span>
+                        </div>
+                        <span class="cd-colon">:</span>
+                        <div class="cd-block accent-block">
+                            <span class="cd-num" id="cdSeconds">--</span>
+                            <span class="cd-unit">SANİYE</span>
+                        </div>
+                    </div>
+                    <div class="cd-footer">
+                        <div class="cd-progress-track"><div class="cd-progress-fill" id="ringProgress"></div></div>
+                        <span id="nextPrayerTime" class="cd-target"></span>
+                    </div>
+                </div>
+
+                <!-- Fasting Duration -->
+                <div class="fasting-bar glass-card" id="fastingBar">
+                    <div class="fasting-header">
+                        <span><i class="ri-time-line"></i> Oruç Süresi</span>
+                        <span id="fastingDuration">--</span>
+                    </div>
+                    <div class="fasting-track">
+                        <div class="fasting-fill" id="fastingFill"></div>
+                        <span class="fasting-pct-badge" id="fastingPct">%0</span>
+                    </div>
+                    <div class="fasting-labels">
+                        <span id="fastingStart">İmsak</span>
+                        <span id="fastingEnd">İftar</span>
+                    </div>
+                </div>
+
+                <!-- Ramazan Bilgileri -->
+                <div class="ramazan-info glass-card" id="ramazanInfoCard">
+                    <div class="rinfo-row">
+                        <div class="rinfo-item">
+                            <i class="ri-hand-coin-line"></i>
+                            <span class="rinfo-label">Fitre</span>
+                            <strong class="rinfo-val">240₺</strong>
+                        </div>
+                        <div class="rinfo-divider"></div>
+                        <div class="rinfo-item">
+                            <i class="ri-sparkling-2-line"></i>
+                            <span class="rinfo-label">Kadir Gecesi</span>
+                            <strong class="rinfo-val">16 Mart</strong>
+                        </div>
+                        <div class="rinfo-divider"></div>
+                        <div class="rinfo-item">
+                            <i class="ri-gift-2-line"></i>
+                            <span class="rinfo-label">Bayram</span>
+                            <strong class="rinfo-val">20-22 Mart</strong>
+                        </div>
+                    </div>
+                    <div class="rinfo-bayram" id="bayramNamazi" style="display:none">
+                        <i class="ri-sun-foggy-line"></i>
+                        <span>Bayram Namazı</span>
+                        <strong id="bayramNamaziTime">--:--</strong>
+                    </div>
+                </div>
+
+                <!-- Prayer Cards -->
+                <div class="prayer-grid">
+                    <div class="prayer-card glass-card" id="card-fajr" style="--delay:0">
+                        <i class="ri-cloud-windy-line"></i><span class="p-name">İMSAK</span>
+                        <span class="p-time" id="time-fajr">--:--</span>
+                    </div>
+                    <div class="prayer-card glass-card" id="card-sun" style="--delay:1">
+                        <i class="ri-sun-foggy-line"></i><span class="p-name">GÜNEŞ</span>
+                        <span class="p-time" id="time-sun">--:--</span>
+                    </div>
+                    <div class="prayer-card glass-card" id="card-dhuhr" style="--delay:2">
+                        <i class="ri-sun-fill"></i><span class="p-name">ÖĞLE</span>
+                        <span class="p-time" id="time-dhuhr">--:--</span>
+                    </div>
+                    <div class="prayer-card glass-card" id="card-asr" style="--delay:3">
+                        <i class="ri-cloudy-line"></i><span class="p-name">İKİNDİ</span>
+                        <span class="p-time" id="time-asr">--:--</span>
+                    </div>
+                    <div class="prayer-card glass-card" id="card-maghrib" style="--delay:4">
+                        <i class="ri-moon-line"></i><span class="p-name">AKŞAM</span>
+                        <span class="p-time" id="time-maghrib">--:--</span>
+                    </div>
+                    <div class="prayer-card glass-card" id="card-isha" style="--delay:5">
+                        <i class="ri-moon-cloudy-line"></i><span class="p-name">YATSI</span>
+                        <span class="p-time" id="time-isha">--:--</span>
+                    </div>
+                </div>
+
+                <!-- Verse -->
+                <div class="verse-card glass-card">
+                    <div class="verse-badge"><i class="ri-book-open-line"></i> GÜNÜN AYETİ</div>
+                    <p class="verse-arabic" id="verseArabic"></p>
+                    <p class="verse-text" id="verseText"></p>
+                    <span class="verse-source" id="verseSource"></span>
+                </div>
+            </div>
+
+            <!-- ===== PAGE: İBADET ===== -->
+            <div class="page" id="page-ibadet">
+
+                <!-- Daily Worship Tracker -->
+                <div class="section-card glass-card">
+                    <div class="section-badge"><i class="ri-checkbox-circle-line"></i> GÜNLÜK İBADET TAKİBİ</div>
+                    <div class="worship-date-nav">
+                        <button class="icon-btn-sm" id="worshipPrevDay"><i class="ri-arrow-left-s-line"></i></button>
+                        <span id="worshipDateLabel">--</span>
+                        <button class="icon-btn-sm" id="worshipNextDay"><i class="ri-arrow-right-s-line"></i></button>
+                    </div>
+                    <div class="worship-progress-bar">
+                        <div class="worship-progress-fill" id="worshipProgressFill"></div>
+                    </div>
+                    <span class="worship-pct" id="worshipPct">0%</span>
+                    <div class="worship-grid" id="worshipGrid">
+                        <label class="worship-item" data-key="sabah">
+                            <input type="checkbox"><span class="worship-check"></span>
+                            <i class="ri-cloud-windy-line"></i><span>Sabah</span>
+                        </label>
+                        <label class="worship-item" data-key="ogle">
+                            <input type="checkbox"><span class="worship-check"></span>
+                            <i class="ri-sun-fill"></i><span>Öğle</span>
+                        </label>
+                        <label class="worship-item" data-key="ikindi">
+                            <input type="checkbox"><span class="worship-check"></span>
+                            <i class="ri-cloudy-line"></i><span>İkindi</span>
+                        </label>
+                        <label class="worship-item" data-key="aksam">
+                            <input type="checkbox"><span class="worship-check"></span>
+                            <i class="ri-moon-line"></i><span>Akşam</span>
+                        </label>
+                        <label class="worship-item" data-key="yatsi">
+                            <input type="checkbox"><span class="worship-check"></span>
+                            <i class="ri-moon-cloudy-line"></i><span>Yatsı</span>
+                        </label>
+                        <label class="worship-item" data-key="teravih">
+                            <input type="checkbox"><span class="worship-check"></span>
+                            <i class="ri-star-line"></i><span>Teravih</span>
+                        </label>
+                        <label class="worship-item" data-key="kuran">
+                            <input type="checkbox"><span class="worship-check"></span>
+                            <i class="ri-book-open-line"></i><span>Kur'an</span>
+                        </label>
+                        <label class="worship-item" data-key="sadaka">
+                            <input type="checkbox"><span class="worship-check"></span>
+                            <i class="ri-hand-heart-line"></i><span>Sadaka</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Hatim Tracker -->
+                <div class="section-card glass-card">
+                    <div class="section-badge"><i class="ri-book-3-line"></i> HATİM TAKİPÇİSİ</div>
+                    <div class="hatim-stats">
+                        <span id="hatimCompleted">0</span> / 30 Cüz
+                        <div class="hatim-pct" id="hatimPct">0%</div>
+                    </div>
+                    <div class="hatim-progress-bar">
+                        <div class="hatim-progress-fill" id="hatimProgressFill"></div>
+                    </div>
+                    <div class="hatim-grid" id="hatimGrid"></div>
+                    <button class="btn-reset-sm" id="hatimReset"><i class="ri-restart-line"></i> Sıfırla</button>
+                </div>
+
+                <!-- Journal -->
+                <div class="section-card glass-card">
+                    <div class="section-badge"><i class="ri-quill-pen-line"></i> RAMAZAN GÜNLÜĞÜ</div>
+                    <div class="journal-date-nav">
+                        <button class="icon-btn-sm" id="journalPrevDay"><i class="ri-arrow-left-s-line"></i></button>
+                        <span id="journalDateLabel">--</span>
+                        <button class="icon-btn-sm" id="journalNextDay"><i class="ri-arrow-right-s-line"></i></button>
+                    </div>
+                    <textarea id="journalText" class="journal-textarea"
+                        placeholder="Bugün neler hissettin? Dualarını, düşüncelerini yaz..." rows="4"></textarea>
+                    <button class="btn-save" id="journalSave"><i class="ri-save-line"></i> Kaydet</button>
+                    <div class="journal-saved-msg" id="journalSavedMsg">✓ Kaydedildi</div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="section-card glass-card">
+                    <div class="section-badge"><i class="ri-trophy-line"></i> BAŞARIMLAR</div>
+                    <div class="streak-display">
+                        <div class="streak-flame">🔥</div>
+                        <div class="streak-info">
+                            <span class="streak-count" id="streakCount">0</span>
+                            <span class="streak-label">Gün Seri</span>
+                        </div>
+                    </div>
+                    <div class="badge-grid" id="badgeGrid"></div>
+                </div>
+            </div>
+
+            <!-- ===== PAGE: QIBLA ===== -->
+            <div class="page" id="page-qibla">
+                <div class="section-card glass-card">
+                    <div class="section-badge"><i class="ri-compass-3-line"></i> KIBLE PUSULASI</div>
+                    <svg id="compassSvg" class="compass-svg" viewBox="0 0 300 300">
+                        <circle cx="150" cy="150" r="130" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1" />
+                        <circle cx="150" cy="150" r="100" fill="none" stroke="rgba(255,255,255,0.06)"
+                            stroke-width="1" />
+                        <text x="150" y="30" text-anchor="middle" fill="var(--accent)" font-size="16"
+                            font-weight="700">K</text>
+                        <text x="150" y="285" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="14">G</text>
+                        <text x="25" y="155" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="14">B</text>
+                        <text x="275" y="155" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="14">D</text>
+                        <g id="qiblaNeedle">
+                            <polygon points="150,30 145,150 155,150" fill="var(--accent)" opacity="0.9" />
+                            <polygon points="150,270 145,150 155,150" fill="rgba(255,255,255,0.2)" />
+                            <circle cx="150" cy="150" r="8" fill="var(--accent)" />
+                            <text x="150" y="255" text-anchor="middle" fill="var(--accent)" font-size="11"
+                                font-weight="700">KIBLE</text>
+                        </g>
+                    </svg>
+                    <div class="qibla-info">
+                        <strong id="qiblaCity">--</strong>
+                        <span class="qibla-angle" id="qiblaAngle">--</span>
+                    </div>
+                    <p class="qibla-hint"><i class="ri-information-line"></i> Pusula, cihazınızın yön sensörünü
+                        kullanır. İzin istediğinde "İzin Ver" seçin.</p>
+                </div>
+            </div>
+
+            <!-- ===== PAGE: TESBIH ===== -->
+            <div class="page" id="page-tesbih">
+                <div class="section-card glass-card">
+                    <div class="section-badge"><i class="ri-heart-pulse-line"></i> DİJİTAL TESBİH</div>
+                    <div class="tesbih-ring-wrap">
+                        <svg viewBox="0 0 160 160" class="tesbih-ring-svg">
+                            <circle cx="80" cy="80" r="70" fill="none" stroke="rgba(255,255,255,0.08)"
+                                stroke-width="8" />
+                            <circle id="tesbihProgress" cx="80" cy="80" r="70" fill="none" stroke="url(#moonGrad)"
+                                stroke-width="8" stroke-linecap="round" stroke-dasharray="440" stroke-dashoffset="440"
+                                transform="rotate(-90 80 80)" />
+                        </svg>
+                        <div class="tesbih-count-wrap">
+                            <span class="tesbih-count" id="tesbihCount">0</span>
+                            <span class="tesbih-target" id="tesbihTarget">/ 33</span>
+                        </div>
+                    </div>
+                    <p class="tesbih-label amiri" id="tesbihLabel">سُبْحَانَ اللَّهِ</p>
+                    <p class="tesbih-label-tr" id="tesbihLabelTr">SubhanAllah</p>
+                    <button class="tesbih-btn" id="tesbihBtn">+</button>
+                    <div class="tesbih-steps">
+                        <span class="step active" data-idx="0">SubhanAllah</span>
+                        <span class="step" data-idx="1">Elhamdulillah</span>
+                        <span class="step" data-idx="2">Allahuekber</span>
+                    </div>
+                    <button class="btn-reset-sm" id="tesbihReset"><i class="ri-restart-line"></i> Sıfırla</button>
+                </div>
+            </div>
+
+            <!-- ===== PAGE: GAME ===== -->
+            <div class="page" id="page-game">
+                <div class="game-container">
+                    <div class="game-hud">
+                        <div class="game-hud-item"><span class="game-hud-val" id="gameScore">0</span><span
+                                class="game-hud-label">SKOR</span></div>
+                        <div class="game-hud-item"><span class="game-hud-val accent" id="gameLevel">1</span><span
+                                class="game-hud-label">SEVİYE</span></div>
+                        <div class="game-hud-item"><span class="game-hud-val" id="gameHigh">0</span><span
+                                class="game-hud-label">EN İYİ</span></div>
+                    </div>
+                    <div class="game-canvas-wrap">
+                        <canvas id="gameCanvas"></canvas>
+                        <div class="game-overlay" id="gameOverlay">
+                            <div class="game-overlay-content">
+                                <div class="game-overlay-icon">🎮</div>
+                                <h2 id="gameOverTitle">Çizgi Üzerinde Top</h2>
+                                <p id="gameOverMsg">Topu çizgide tut, düşürme!</p>
+                                <p class="game-final-score" id="gameFinalScore"></p>
+                                <button class="game-start-btn" id="gameStartBtn">BAŞLA</button>
+                                <p class="game-hint">Dokunarak zıpla · Zamanlama her şey!</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="game-tips glass-card">
+                        <p>👆 <strong>Kısa dokun</strong> → küçük zıplama</p>
+                        <p>👆 <strong>Uzun dokun</strong> → yüksek zıplama</p>
+                        <p>⚠️ <strong>Çok dokunma</strong> → top savrulur</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== PAGE: TABLE ===== -->
+            <div class="page" id="page-table">
+                <div class="section-card glass-card">
+                    <div class="table-header">
+                        <strong>Namaz Vakitleri</strong>
+                        <div class="tabs">
+                            <button class="tab active" data-days="7">7 Gün</button>
+                            <button class="tab" data-days="10">10 Gün</button>
+                            <button class="tab" data-days="30">Aylık</button>
+                        </div>
+                    </div>
+                    <div class="table-scroll">
+                        <table class="prayer-table">
+                            <thead>
+                                <tr>
+                                    <th>TARİH</th>
+                                    <th>İMSAK</th>
+                                    <th>GÜNEŞ</th>
+                                    <th>ÖĞLE</th>
+                                    <th>İKİNDİ</th>
+                                    <th>AKŞAM</th>
+                                    <th>YATSI</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prayerTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /content-area -->
+
+        <!-- BOTTOM NAV -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-page="home"><i
+                    class="ri-home-4-line"></i><span>Vakitler</span></button>
+            <button class="nav-item" data-page="ibadet"><i
+                    class="ri-checkbox-circle-line"></i><span>İbadet</span></button>
+            <button class="nav-item" data-page="game"><i class="ri-gamepad-line"></i><span>Oyun</span></button>
+            <button class="nav-item" data-page="qibla"><i class="ri-compass-3-line"></i><span>Kıble</span></button>
+            <button class="nav-item" data-page="tesbih"><i class="ri-heart-pulse-line"></i><span>Tesbih</span></button>
+            <button class="nav-item" data-page="table"><i class="ri-table-line"></i><span>Tablo</span></button>
+        </nav>
+
+        <!-- BG ELEMENTS -->
+        <div class="bg-stars">
+            <div class="star" style="top:10%;left:20%;--d:3s"></div>
+            <div class="star" style="top:25%;left:80%;--d:5s"></div>
+            <div class="star" style="top:60%;left:50%;--d:4s"></div>
+            <div class="star" style="top:75%;left:15%;--d:6s"></div>
+            <div class="star" style="top:45%;left:90%;--d:3.5s"></div>
+        </div>
+        <div class="bg-mosque"></div>
+
+    </div><!-- /app-wrapper -->
+
     <script src="embedded_data.js"></script>
+    <script src="game.js"></script>
     <script src="app.js"></script>
 </body>
 

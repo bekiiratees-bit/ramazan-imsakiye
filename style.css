@@ -1,422 +1,609 @@
-/* ========== CSS VARIABLES: DARK THEME (DEFAULT) ========== */
+/* ==========================================================
+   RAMAZAN İMSAKİYE 2026 — PREMIUM STYLES
+   ========================================================== */
+
+/* --- CSS VARIABLES --- */
 :root {
-    --bg-primary: #0a0e1a;
-    --bg-secondary: #111827;
-    --bg-card: rgba(17, 24, 39, 0.7);
-    --bg-card-hover: rgba(30, 41, 59, 0.8);
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
+    --bg: #0a0e1a;
+    --surface: rgba(255, 255, 255, 0.06);
+    --surface-hover: rgba(255, 255, 255, 0.1);
+    --text: #f1f5f9;
+    --text-dim: rgba(255, 255, 255, 0.5);
     --accent: #f59e0b;
     --accent-glow: rgba(245, 158, 11, 0.3);
-    --accent2: #10b981;
-    --border: rgba(148, 163, 184, 0.1);
-    --glass-bg: rgba(15, 23, 42, 0.6);
-    --glass-border: rgba(148, 163, 184, 0.15);
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    --gradient-text: linear-gradient(135deg, #f59e0b, #ef4444, #f59e0b);
-    --star-color: rgba(245, 158, 11, 0.6);
-    --progress-bg: rgba(148, 163, 184, 0.15);
-    --progress-fill: linear-gradient(90deg, #f59e0b, #ef4444);
-    --table-row-alt: rgba(148, 163, 184, 0.05);
-    --table-row-today: rgba(245, 158, 11, 0.15);
-    --sahur-accent: #818cf8;
-    --iftar-accent: #f59e0b;
-    --tesbih-btn: linear-gradient(135deg, #f59e0b, #ef4444);
+    --success: #22c55e;
+    --danger: #ef4444;
+    --glass: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --nav-bg: rgba(10, 14, 26, 0.92);
+    --card-radius: 16px;
+    --font: 'Outfit', sans-serif;
+    --font-ar: 'Amiri', serif;
 }
 
-/* ========== LIGHT THEME ========== */
 [data-theme="light"] {
-    --bg-primary: #f8fafc;
-    --bg-secondary: #e2e8f0;
-    --bg-card: rgba(255, 255, 255, 0.85);
-    --bg-card-hover: rgba(241, 245, 249, 0.95);
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #94a3b8;
-    --accent: #d97706;
-    --accent-glow: rgba(217, 119, 6, 0.2);
-    --accent2: #059669;
-    --border: rgba(71, 85, 105, 0.15);
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --glass-border: rgba(71, 85, 105, 0.12);
-    --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
-    --gradient-text: linear-gradient(135deg, #d97706, #dc2626, #d97706);
-    --star-color: rgba(217, 119, 6, 0.3);
-    --progress-bg: rgba(71, 85, 105, 0.12);
-    --table-row-alt: rgba(71, 85, 105, 0.04);
-    --table-row-today: rgba(217, 119, 6, 0.12);
+    --bg: #f0f4f8;
+    --surface: rgba(0, 0, 0, 0.04);
+    --surface-hover: rgba(0, 0, 0, 0.08);
+    --text: #1e293b;
+    --text-dim: rgba(0, 0, 0, 0.5);
+    --glass: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --nav-bg: rgba(240, 244, 248, 0.92);
 }
 
-[data-theme="light"] .bg-pattern {
-    opacity: 0.3;
-}
-
-/* ========== RESET ========== */
+/* --- RESET --- */
 *,
 *::before,
 *::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Outfit', sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    min-height: 100vh;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    min-height: 100dvh;
+    -webkit-tap-highlight-color: transparent;
 }
 
-/* ========== ANIMATED BACKGROUND ========== */
-.bg-pattern {
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: inherit;
+    font-family: inherit;
+}
+
+select {
+    font-family: inherit;
+}
+
+/* ==========================================================
+   SPLASH SCREEN
+   ========================================================== */
+.splash {
     position: fixed;
     inset: 0;
-    z-index: 0;
+    z-index: 9999;
+    background: linear-gradient(135deg, #0a0e1a 0%, #1a1040 50%, #0a0e1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: splashFade 0.5s ease 1.5s forwards;
+    pointer-events: all;
+}
+
+.splash.hidden {
+    display: none;
+}
+
+.splash-content {
+    text-align: center;
+}
+
+.splash-logo {
+    animation: splashLogoIn 0.6s ease-out;
+    margin-bottom: 16px;
+}
+
+.splash-logo svg {
+    filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.4));
+}
+
+.splash-moon {
+    animation: splashPulse 1.5s ease-in-out infinite;
+}
+
+.splash-star {
+    animation: splashTwinkle 1.2s ease-in-out infinite;
+}
+
+.splash-star.s1 {
+    animation-delay: 0s;
+}
+
+.splash-star.s2 {
+    animation-delay: 0.3s;
+}
+
+.splash-star.s3 {
+    animation-delay: 0.6s;
+}
+
+.splash-title {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: splashTextIn 0.6s ease-out 0.2s both;
+}
+
+.splash-subtitle {
+    font-size: 13px;
+    letter-spacing: 6px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 4px;
+    animation: splashTextIn 0.6s ease-out 0.35s both;
+}
+
+.splash-loader {
+    width: 120px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin: 24px auto 0;
     overflow: hidden;
-    background: radial-gradient(ellipse at 20% 50%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(239, 68, 68, 0.04) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 50%);
 }
 
-.bg-star {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--star-color);
-    animation: twinkle 3s ease-in-out infinite alternate;
+.splash-loader-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #f59e0b, #ef4444);
+    border-radius: 3px;
+    animation: splashLoad 1.3s ease-out forwards;
 }
 
-@keyframes twinkle {
-    0% {
-        opacity: 0.2;
-        transform: scale(0.8)
+.splash-credit {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.25);
+    letter-spacing: 1px;
+    margin-top: 32px;
+    animation: splashTextIn 0.6s ease-out 0.5s both;
+}
+
+@keyframes splashFade {
+    to {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+@keyframes splashLogoIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5) translateY(20px);
     }
 
-    100% {
+    to {
         opacity: 1;
-        transform: scale(1.3)
+        transform: scale(1) translateY(0);
     }
 }
 
-/* ========== LAYOUT ========== */
+@keyframes splashTextIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes splashPulse {
+
+    0%,
+    100% {
+        opacity: 0.9;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes splashTwinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        r: 2;
+    }
+
+    50% {
+        opacity: 1;
+        r: 3.5;
+    }
+}
+
+@keyframes splashLoad {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+
+/* ==========================================================
+   APP WRAPPER & LAYOUT
+   ========================================================== */
 .app-wrapper {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    padding: 16px;
-    padding-top: calc(16px + env(safe-area-inset-top));
-    padding-bottom: calc(16px + env(safe-area-inset-bottom));
-    padding-left: calc(16px + env(safe-area-inset-left));
-    padding-right: calc(16px + env(safe-area-inset-right));
-}
-
-.container {
-    max-width: 680px;
+    max-width: 480px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    position: relative;
+    padding-top: calc(20px + env(safe-area-inset-top, 0px));
+    opacity: 0;
+    animation: appFadeIn 0.4s ease 1.8s forwards;
 }
 
-/* iOS touch optimization */
-button,
-select {
-    -webkit-tap-highlight-color: transparent;
-    touch-action: manipulation;
+@keyframes appFadeIn {
+    to {
+        opacity: 1;
+    }
 }
 
-body {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-.verse-arabic,
-.verse-turkish,
-.dua-arabic,
-.dua-turkish {
-    -webkit-user-select: text;
-    user-select: text;
-}
-
-/* ========== GLASS PANEL ========== */
-.glass-panel {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: var(--shadow);
-}
-
-/* ========== HEADER ========== */
+/* --- HEADER --- */
 .app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
-    margin-bottom: 16px;
+    padding: 12px 16px 8px;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
-.logo-icon-wrap {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(135deg, #f59e0b, #ef4444);
-    font-size: 22px;
-    color: #fff;
-}
-
-.logo-title {
-    font-size: 1.4rem;
+.logo strong {
+    font-size: 18px;
     font-weight: 700;
-    display: block;
 }
 
-.logo-subtitle {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.logo small {
+    display: block;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 2px;
 }
 
 .header-actions {
     display: flex;
-    gap: 8px;
+    gap: 4px;
 }
 
 .icon-btn {
-    width: 42px;
-    height: 42px;
-    border-radius: 12px;
-    border: 1px solid var(--glass-border);
-    background: var(--glass-bg);
-    color: var(--text-primary);
-    font-size: 1.2rem;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    transition: all 0.3s;
-}
-
-.icon-btn:hover {
-    background: var(--accent);
-    color: #fff;
-    transform: scale(1.05);
-}
-
-/* ========== CITY BAR ========== */
-.city-bar {
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    margin-bottom: 16px;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--surface);
+    font-size: 18px;
+    transition: all 0.2s;
 }
 
-.city-pin {
-    font-size: 1.3rem;
-    color: var(--accent);
+.icon-btn:active {
+    transform: scale(0.92);
 }
 
-.city-select {
+/* --- CITY SELECT --- */
+.city-select-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 4px 16px 12px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+}
+
+.city-select-wrap select {
     flex: 1;
     background: transparent;
     border: none;
-    color: var(--text-primary);
-    font-family: 'Outfit', sans-serif;
-    font-size: 1rem;
+    color: var(--text);
+    font-size: 15px;
     font-weight: 500;
-    cursor: pointer;
     appearance: none;
     outline: none;
 }
 
-.city-select option {
-    background: var(--bg-secondary);
-    color: var(--text-primary);
+.city-select-wrap i {
+    color: var(--accent);
+    font-size: 16px;
 }
 
-.select-arrow {
-    color: var(--text-muted);
-    font-size: 1.2rem;
+/* --- CONTENT AREA --- */
+.content-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 16px 100px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* ========== PROGRESS BAR ========== */
+.content-area::-webkit-scrollbar {
+    display: none;
+}
+
+/* --- PAGE SYSTEM --- */
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+    animation: pageIn 0.3s ease;
+}
+
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================
+   GLASSCARD (shared)
+   ========================================================== */
+.glass-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--card-radius);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 16px;
+}
+
+.section-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--card-radius);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 20px 16px;
+    margin-bottom: 16px;
+}
+
+.section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+/* ==========================================================
+   HOME PAGE — info row, progress, countdown, prayer cards
+   ========================================================== */
+.info-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+}
+
+.info-chip {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 6px 12px;
+    background: var(--surface);
+    border-radius: 20px;
+    color: var(--text-dim);
+}
+
+.info-chip.highlight {
+    color: var(--accent);
+    background: rgba(245, 158, 11, 0.12);
+}
+
+.info-chip i {
+    font-size: 14px;
+}
+
+/* Progress */
 .progress-section {
     margin-bottom: 16px;
-    padding: 0 4px;
 }
 
 .progress-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-bottom: 6px;
 }
 
-.progress-label {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.progress-day {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--accent);
-}
-
-.progress-track {
-    height: 8px;
-    border-radius: 4px;
-    background: var(--progress-bg);
+.progress-bar {
+    height: 6px;
+    background: var(--surface);
+    border-radius: 3px;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    border-radius: 4px;
-    background: var(--progress-fill);
-    transition: width 1s ease;
-    position: relative;
+    background: linear-gradient(90deg, #f59e0b, #22c55e);
+    border-radius: 3px;
+    transition: width 0.6s ease;
 }
 
-.progress-fill::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: -2px;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 8px var(--accent-glow);
-    animation: pulse-dot 2s ease-in-out infinite;
-}
-
-@keyframes pulse-dot {
-
-    0%,
-    100% {
-        box-shadow: 0 0 4px var(--accent-glow)
-    }
-
-    50% {
-        box-shadow: 0 0 16px var(--accent-glow)
-    }
-}
-
-.progress-footer {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 6px;
-    font-size: 0.7rem;
-    color: var(--text-muted);
-}
-
-/* ========== DATE STRIP ========== */
-.date-strip {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+/* Countdown — Professional Card Design */
+.countdown-card {
+    padding: 16px 16px 16px;
     margin-bottom: 16px;
 }
 
-.date-chip {
-    flex: 1;
-    min-width: 120px;
+.cd-selector {
     display: flex;
-    align-items: center;
     gap: 6px;
-    padding: 8px 12px;
-    border-radius: 10px;
-    font-size: 0.78rem;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text-secondary);
+    overflow-x: auto;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
-.date-chip i {
-    color: var(--accent);
-    font-size: 1rem;
+.cd-selector::-webkit-scrollbar {
+    display: none;
 }
 
-.date-chip.accent {
-    color: var(--accent);
-    font-weight: 600;
-    border-color: var(--accent-glow);
-}
-
-/* ========== COUNTDOWN ========== */
-.countdown-hero {
-    text-align: center;
-    padding: 28px 20px;
-    margin-bottom: 16px;
-}
-
-.countdown-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 16px;
+.cd-pill {
+    flex-shrink: 0;
+    padding: 6px 12px;
     border-radius: 20px;
-    font-size: 0.78rem;
+    font-size: 11px;
     font-weight: 600;
-    background: rgba(245, 158, 11, 0.12);
-    color: var(--accent);
-    margin-bottom: 16px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
 }
 
-.countdown-display {
+.cd-pill:active {
+    transform: scale(0.95);
+}
+
+.cd-pill.active {
+    background: rgba(245, 158, 11, 0.15);
+    border-color: rgba(245, 158, 11, 0.4);
+    color: var(--accent);
+}
+
+.cd-header {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     gap: 8px;
+    margin-bottom: 20px;
 }
 
-.countdown-segment {
-    text-align: center;
-}
-
-.countdown-num {
-    font-size: 2.8rem;
-    font-weight: 800;
-    display: block;
-    line-height: 1;
-    background: var(--gradient-text);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.countdown-unit {
-    font-size: 0.6rem;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    letter-spacing: 2px;
-}
-
-.countdown-sep {
-    font-size: 2rem;
-    font-weight: 700;
+.cd-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(245, 158, 11, 0.15);
     color: var(--accent);
-    opacity: 0.5;
-    padding-bottom: 12px;
+    font-size: 14px;
+}
+
+.cd-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: var(--accent);
+    text-transform: uppercase;
+}
+
+.cd-digits {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.cd-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 14px 18px 10px;
+    min-width: 78px;
+    transition: border-color 0.3s;
+}
+
+.cd-block.accent-block {
+    border-color: rgba(245, 158, 11, 0.35);
+    background: rgba(245, 158, 11, 0.06);
+}
+
+.cd-num {
+    font-size: 38px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+
+.accent-block .cd-num {
+    color: var(--accent);
+}
+
+.cd-unit {
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+}
+
+.cd-colon {
+    font-size: 30px;
+    font-weight: 300;
+    color: var(--text-dim);
     animation: blink 1s step-end infinite;
+    margin-bottom: 16px;
+}
+
+.cd-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cd-progress-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.cd-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #ef4444);
+    border-radius: 2px;
+    transition: width 1s linear;
+    width: 0;
+}
+
+.cd-target {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    white-space: nowrap;
 }
 
 @keyframes blink {
@@ -425,7 +612,130 @@ body {
     }
 }
 
-/* ========== PRAYER CARDS ========== */
+/* Fasting Bar */
+.fasting-bar {
+    margin-bottom: 16px;
+}
+
+.fasting-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.fasting-header span:first-child {
+    color: var(--text-dim);
+}
+
+.fasting-header span:last-child {
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.fasting-track {
+    height: 8px;
+    background: var(--surface);
+    border-radius: 4px;
+    overflow: visible;
+    position: relative;
+}
+
+.fasting-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f59e0b, #ef4444);
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+.fasting-pct-badge {
+    position: absolute;
+    top: -22px;
+    right: 0;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(245, 158, 11, 0.12);
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.fasting-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 4px;
+}
+
+/* Ramazan Info Card */
+.ramazan-info {
+    margin-bottom: 16px;
+    padding: 14px 12px;
+}
+
+.rinfo-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.rinfo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    text-align: center;
+}
+
+.rinfo-item i {
+    font-size: 18px;
+    color: var(--accent);
+    margin-bottom: 2px;
+}
+
+.rinfo-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+}
+
+.rinfo-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.rinfo-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.rinfo-bayram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 13px;
+    color: var(--text-dim);
+}
+
+.rinfo-bayram i {
+    color: var(--accent);
+    font-size: 16px;
+}
+
+.rinfo-bayram strong {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+/* Prayer Cards */
 .prayer-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -435,632 +745,995 @@ body {
 
 .prayer-card {
     text-align: center;
-    padding: 16px 8px;
-    position: relative;
-    overflow: hidden;
+    padding: 14px 8px;
+    animation: cardIn 0.4s ease calc(var(--delay) * 0.08s) both;
     transition: all 0.3s;
-    cursor: default;
 }
 
-.prayer-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--accent-glow);
-}
-
-.card-glow {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.3s;
-    background: radial-gradient(circle at center, var(--accent-glow) 0%, transparent 70%);
-}
-
-.prayer-card.active .card-glow {
-    opacity: 1;
-}
-
-.prayer-card.active {
-    border-color: var(--accent);
-}
-
-.card-icon {
-    font-size: 1.5rem;
-    color: var(--accent);
-    display: block;
-    margin-bottom: 6px;
-}
-
-.card-label {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-muted);
+.prayer-card i {
+    font-size: 20px;
+    color: var(--text-dim);
     display: block;
     margin-bottom: 4px;
 }
 
-.card-time {
-    font-size: 1.4rem;
-    font-weight: 700;
+.prayer-card .p-name {
     display: block;
-}
-
-/* ========== TABLE SECTION ========== */
-.table-section {
-    padding: 20px;
-    margin-bottom: 16px;
-}
-
-.table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.table-title {
-    font-size: 1rem;
+    font-size: 10px;
     font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.table-title i {
-    color: var(--accent);
-}
-
-.tab-bar {
-    display: flex;
-    gap: 4px;
-    background: var(--progress-bg);
-    border-radius: 10px;
-    padding: 3px;
-}
-
-.tab-btn {
-    padding: 7px 16px;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.78rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.25s;
-    background: transparent;
-    color: var(--text-muted);
-}
-
-.tab-btn.active {
-    background: var(--accent);
-    color: #fff;
-    box-shadow: 0 2px 8px var(--accent-glow);
-}
-
-.tab-btn:hover:not(.active) {
-    color: var(--text-primary);
-}
-
-.table-scroll {
-    overflow-x: auto;
-    border-radius: 10px;
-}
-
-.prayer-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.82rem;
-}
-
-.prayer-table th {
-    padding: 10px 8px;
-    text-align: center;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--accent);
-    border-bottom: 2px solid var(--border);
-    white-space: nowrap;
+    color: var(--text-dim);
+    margin-bottom: 4px;
 }
 
-.prayer-table td {
-    padding: 10px 8px;
-    text-align: center;
-    border-bottom: 1px solid var(--border);
-    white-space: nowrap;
-    color: var(--text-secondary);
+.prayer-card .p-time {
+    font-size: 18px;
+    font-weight: 700;
 }
 
-.prayer-table td:first-child {
-    font-weight: 500;
-    color: var(--text-primary);
-    text-align: left;
+.prayer-card.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 20px var(--accent-glow);
 }
 
-.prayer-table tbody tr:nth-child(even) {
-    background: var(--table-row-alt);
-}
-
-.prayer-table tbody tr.today-row {
-    background: var(--table-row-today) !important;
-    font-weight: 600;
-}
-
-.prayer-table tbody tr.today-row td {
+.prayer-card.active i,
+.prayer-card.active .p-name {
     color: var(--accent);
 }
 
-.prayer-table tbody tr:hover {
-    background: var(--bg-card-hover);
+@keyframes cardIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* ========== VERSE ========== */
+/* Verse */
 .verse-card {
-    padding: 24px 20px;
-    margin-bottom: 16px;
     text-align: center;
+    margin-bottom: 16px;
 }
 
 .verse-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    background: rgba(16, 185, 129, 0.12);
-    color: var(--accent2);
-    margin-bottom: 16px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin-bottom: 12px;
 }
 
 .verse-arabic {
-    font-family: 'Amiri', serif;
-    font-size: 1.5rem;
-    line-height: 2;
-    direction: rtl;
-    margin-bottom: 14px;
-    color: var(--accent);
-}
-
-.verse-turkish {
-    font-size: 0.9rem;
+    font-family: var(--font-ar);
+    font-size: 22px;
     line-height: 1.7;
-    color: var(--text-secondary);
-    font-style: italic;
-    margin-bottom: 10px;
-}
-
-.verse-ref {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-}
-
-/* ========== DUA SECTION ========== */
-.dua-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.dua-card {
-    padding: 20px 16px;
-    text-align: center;
-}
-
-.dua-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    margin-bottom: 14px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.sahur-badge {
-    background: rgba(129, 140, 248, 0.12);
-    color: var(--sahur-accent);
-}
-
-.iftar-badge {
-    background: rgba(245, 158, 11, 0.12);
-    color: var(--iftar-accent);
-}
-
-.dua-arabic {
-    font-family: 'Amiri', serif;
-    font-size: 1.15rem;
-    line-height: 1.9;
     direction: rtl;
     margin-bottom: 12px;
-    color: var(--text-primary);
+    color: var(--accent);
 }
 
-.dua-turkish {
-    font-size: 0.8rem;
+.verse-text {
+    font-size: 14px;
     line-height: 1.6;
-    color: var(--text-secondary);
+    color: var(--text-dim);
+    margin-bottom: 8px;
     font-style: italic;
 }
 
-/* ========== TESBIH COUNTER ========== */
-.tesbih-section {
-    padding: 24px 20px;
-    margin-bottom: 16px;
-    text-align: center;
-}
-
-.tesbih-header {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 5px 14px;
-    border-radius: 20px;
-    font-size: 0.72rem;
+.verse-source {
+    font-size: 11px;
     font-weight: 600;
-    background: rgba(245, 158, 11, 0.12);
     color: var(--accent);
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
-.tesbih-display {
+/* ==========================================================
+   İBADET PAGE
+   ========================================================== */
+
+/* --- Worship Tracker --- */
+.worship-date-nav {
     display: flex;
+    align-items: center;
     justify-content: center;
-    align-items: baseline;
-    gap: 4px;
+    gap: 16px;
     margin-bottom: 12px;
 }
 
-.tesbih-counter {
-    font-size: 3.5rem;
-    font-weight: 800;
-    line-height: 1;
-    background: var(--gradient-text);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.worship-date-nav span {
+    font-size: 14px;
+    font-weight: 600;
 }
 
-.tesbih-target {
-    font-size: 1.2rem;
-    color: var(--text-muted);
+.icon-btn-sm {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: var(--surface);
+    font-size: 18px;
+    transition: all 0.2s;
+}
+
+.icon-btn-sm:active {
+    transform: scale(0.9);
+    background: var(--surface-hover);
+}
+
+.worship-progress-bar {
+    height: 6px;
+    background: var(--surface);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 4px;
+}
+
+.worship-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #22c55e, #4ade80);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+.worship-pct {
+    display: block;
+    text-align: right;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+}
+
+.worship-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+}
+
+.worship-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.worship-item:active {
+    transform: scale(0.97);
+}
+
+.worship-item input {
+    display: none;
+}
+
+.worship-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    border: 2px solid var(--glass-border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+}
+
+.worship-check::after {
+    content: '✓';
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.25s;
+}
+
+.worship-item input:checked~.worship-check {
+    background: var(--success);
+    border-color: var(--success);
+}
+
+.worship-item input:checked~.worship-check::after {
+    opacity: 1;
+    transform: scale(1);
+    color: #fff;
+}
+
+.worship-item input:checked~i {
+    color: var(--success);
+}
+
+.worship-item i {
+    font-size: 18px;
+    color: var(--text-dim);
+    transition: color 0.2s;
+}
+
+.worship-item span {
+    font-size: 13px;
     font-weight: 500;
 }
 
+/* --- Hatim Tracker --- */
+.hatim-stats {
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+}
+
+.hatim-stats span {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.hatim-pct {
+    font-size: 12px;
+    color: var(--accent);
+    margin-top: 2px;
+}
+
+.hatim-progress-bar {
+    height: 6px;
+    background: var(--surface);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.hatim-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #f59e0b, #22c55e);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+.hatim-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.hatim-cell {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.25s;
+    border: 2px solid transparent;
+}
+
+.hatim-cell:active {
+    transform: scale(0.9);
+}
+
+.hatim-cell.done {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(34, 197, 94, 0.15));
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.hatim-cell.current {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.btn-reset-sm {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px auto 0;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    background: var(--surface);
+    transition: all 0.2s;
+}
+
+.btn-reset-sm:active {
+    transform: scale(0.95);
+    background: var(--surface-hover);
+}
+
+/* --- Journal --- */
+.journal-date-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.journal-date-nav span {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.journal-textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--glass-border);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14px;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    min-height: 100px;
+}
+
+.journal-textarea:focus {
+    border-color: var(--accent);
+}
+
+.journal-textarea::placeholder {
+    color: var(--text-dim);
+}
+
+.btn-save {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    transition: all 0.2s;
+}
+
+.btn-save:active {
+    transform: scale(0.96);
+}
+
+.journal-saved-msg {
+    font-size: 12px;
+    color: var(--success);
+    margin-top: 8px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.journal-saved-msg.show {
+    opacity: 1;
+}
+
+/* --- Achievements --- */
+.streak-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.1));
+    border-radius: 14px;
+}
+
+.streak-flame {
+    font-size: 36px;
+    animation: flamePulse 1s ease-in-out infinite;
+}
+
+@keyframes flamePulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+.streak-info {
+    text-align: center;
+}
+
+.streak-count {
+    display: block;
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.streak-label {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.badge-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.badge-item {
+    text-align: center;
+    padding: 14px 8px;
+    border-radius: 14px;
+    background: var(--surface);
+    transition: all 0.3s;
+}
+
+.badge-item.unlocked {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-item.locked {
+    opacity: 0.4;
+}
+
+.badge-icon {
+    font-size: 28px;
+    margin-bottom: 4px;
+}
+
+.badge-item.locked .badge-icon {
+    filter: grayscale(1);
+}
+
+.badge-name {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-dim);
+    display: block;
+}
+
+.badge-item.unlocked .badge-name {
+    color: var(--accent);
+}
+
+/* ==========================================================
+   QIBLA
+   ========================================================== */
+.compass-svg {
+    display: block;
+    max-width: 280px;
+    margin: 0 auto 16px;
+}
+
+.qibla-info {
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.qibla-info strong {
+    font-size: 18px;
+    margin-right: 8px;
+}
+
+.qibla-angle {
+    font-size: 14px;
+    color: var(--accent);
+}
+
+.qibla-hint {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-align: center;
+    line-height: 1.5;
+}
+
+/* ==========================================================
+   TESBIH
+   ========================================================== */
+.tesbih-ring-wrap {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    margin: 0 auto 16px;
+}
+
+.tesbih-ring-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.tesbih-count-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.tesbih-count {
+    font-size: 44px;
+    font-weight: 800;
+}
+
+.tesbih-target {
+    font-size: 14px;
+    color: var(--text-dim);
+}
+
 .tesbih-label {
-    font-family: 'Amiri', serif;
-    font-size: 1.8rem;
+    font-family: var(--font-ar);
+    font-size: 28px;
+    text-align: center;
     color: var(--accent);
     margin-bottom: 4px;
     direction: rtl;
 }
 
 .tesbih-label-tr {
-    font-size: 0.85rem;
-    color: var(--text-muted);
+    font-size: 14px;
+    text-align: center;
+    color: var(--text-dim);
     margin-bottom: 20px;
 }
 
 .tesbih-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 72px;
     height: 72px;
+    margin: 0 auto 16px;
     border-radius: 50%;
-    border: none;
-    background: var(--tesbih-btn);
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
     color: #fff;
-    font-size: 2rem;
-    cursor: pointer;
-    display: inline-grid;
-    place-items: center;
     box-shadow: 0 4px 20px var(--accent-glow);
     transition: all 0.15s;
-    margin-bottom: 16px;
 }
 
-.tesbih-btn:hover {
-    transform: scale(1.08);
-}
-
-.tesbih-btn:active {
-    transform: scale(0.95);
-}
-
+.tesbih-btn:active,
 .tesbih-btn.pulse {
-    animation: tesbih-pulse 0.3s ease;
+    transform: scale(0.9);
 }
 
-@keyframes tesbih-pulse {
-    0% {
-        transform: scale(1)
-    }
-
-    50% {
-        transform: scale(1.15)
-    }
-
-    100% {
-        transform: scale(1)
-    }
-}
-
-.tesbih-phases {
+.tesbih-steps {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    gap: 12px;
     margin-bottom: 12px;
 }
 
-.tesbih-phase {
-    padding: 5px 12px;
-    border-radius: 8px;
-    font-size: 0.72rem;
-    font-weight: 500;
-    background: var(--progress-bg);
-    color: var(--text-muted);
+.step {
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: var(--surface);
+    color: var(--text-dim);
     transition: all 0.3s;
 }
 
-.tesbih-phase.active {
-    background: var(--accent);
-    color: #fff;
+.step.active {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--accent);
+    font-weight: 600;
 }
 
-.tesbih-phase.done {
-    background: var(--accent2);
-    color: #fff;
+.step.done {
+    text-decoration: line-through;
+    opacity: 0.5;
 }
 
-.tesbih-reset {
-    padding: 6px 16px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: transparent;
-    color: var(--text-muted);
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.75rem;
-    cursor: pointer;
-    display: inline-flex;
+/* ==========================================================
+   TABLE
+   ========================================================== */
+.table-header {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tabs {
+    display: flex;
     gap: 4px;
+}
+
+.tab {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--surface);
+    color: var(--text-dim);
     transition: all 0.2s;
 }
 
-.tesbih-reset:hover {
-    border-color: var(--accent);
+.tab.active {
+    background: var(--accent);
+    color: #000;
+}
+
+.table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.prayer-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.prayer-table th {
+    padding: 8px 6px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.prayer-table td {
+    padding: 8px 6px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.prayer-table tr {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.prayer-table .today-row {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.prayer-table .today-row td {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.prayer-table .kadir-row {
+    background: rgba(168, 85, 247, 0.12);
+}
+
+.prayer-table .kadir-row td:first-child::after {
+    content: ' ✨';
+}
+
+/* ==========================================================
+   BOTTOM NAV
+   ========================================================== */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    justify-content: space-around;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+    background: var(--nav-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--glass-border);
+    z-index: 100;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 0;
+    min-width: 56px;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-dim);
+    transition: all 0.2s;
+}
+
+.nav-item i {
+    font-size: 22px;
+    transition: all 0.2s;
+}
+
+.nav-item.active {
     color: var(--accent);
 }
 
-/* ========== SOURCE LABEL ========== */
-.source-label {
-    text-align: center;
-    padding: 16px;
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
+.nav-item.active i {
+    transform: scale(1.15);
 }
 
-.source-label i {
-    color: var(--accent2);
+/* ==========================================================
+   BG ELEMENTS
+   ========================================================== */
+.bg-stars {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
 }
 
-/* ========== PRINT STYLES ========== */
-@media print {
-    body {
-        background: #fff;
-        color: #000;
+.star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: rgba(245, 158, 11, 0.4);
+    border-radius: 50%;
+    animation: twinkle var(--d, 3s) ease-in-out infinite;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.2;
+        transform: scale(0.8);
     }
 
-    .bg-pattern,
+    50% {
+        opacity: 1;
+        transform: scale(1.4);
+    }
+}
+
+.bg-mosque {
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(transparent, var(--bg));
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* ==========================================================
+   PRINT
+   ========================================================== */
+@media print {
+
+    .splash,
+    .bottom-nav,
+    .app-header,
+    .city-select-wrap,
+    .bg-stars,
+    .bg-mosque,
     .icon-btn,
-    .countdown-hero,
-    .verse-card,
-    .dua-section,
-    .tesbih-section,
-    .progress-section,
-    .source-label,
-    .city-bar {
+    .tabs {
         display: none !important;
     }
 
     .app-wrapper {
+        height: auto;
+        overflow: visible;
         padding: 0;
     }
 
-    .glass-panel {
-        background: #fff;
-        border: 1px solid #ddd;
+    .content-area {
+        overflow: visible;
+        padding: 0;
+    }
+
+    .page {
+        display: none !important;
+    }
+
+    #page-table {
+        display: block !important;
+    }
+
+    .section-card {
+        border: 1px solid #ccc;
         box-shadow: none;
         backdrop-filter: none;
     }
 
-    .prayer-card {
-        border: 1px solid #ccc;
-    }
-
-    .card-time {
-        color: #000;
-    }
-
-    .table-section {
-        padding: 10px;
-    }
-
-    .prayer-table th {
-        color: #333;
-        border-bottom: 2px solid #333;
-    }
-
-    .prayer-table td {
-        color: #333;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .prayer-table tbody tr.today-row td {
-        color: #d97706;
-        font-weight: 700;
-    }
-
-    .tab-bar {
-        display: none;
-    }
-
-    .app-header {
-        print-color-adjust: exact;
-        -webkit-print-color-adjust: exact;
-    }
-
-    .logo-icon-wrap {
-        display: none;
-    }
-
-    .logo-title {
-        color: #000;
-    }
-
-    .logo-subtitle {
-        color: #666;
-    }
-}
-
-/* ========== RESPONSIVE ========== */
-
-/* Tablets */
-@media (max-width: 768px) {
-    .prayer-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 8px;
-    }
-
-    .countdown-num {
-        font-size: 2.2rem;
-    }
-
-    .dua-section {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Phones */
-@media (max-width: 480px) {
-    .app-wrapper {
-        padding: 10px;
-    }
-
-    .prayer-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
-    }
-
-    .prayer-card {
-        padding: 12px 6px;
-    }
-
-    .card-time {
-        font-size: 1.15rem;
-    }
-
-    .card-icon {
-        font-size: 1.2rem;
-    }
-
-    .countdown-num {
-        font-size: 2rem;
-    }
-
-    .countdown-hero {
-        padding: 20px 14px;
-    }
-
-    .table-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .tab-bar {
-        width: 100%;
-        justify-content: stretch;
-    }
-
-    .tab-btn {
-        flex: 1;
-        text-align: center;
-        padding: 7px 10px;
-    }
-
-    .verse-arabic {
-        font-size: 1.2rem;
-    }
-
-    .tesbih-counter {
-        font-size: 2.8rem;
-    }
-
-    .tesbih-label {
-        font-size: 1.4rem;
-    }
-
-    .tesbih-btn {
-        width: 60px;
-        height: 60px;
-        font-size: 1.6rem;
-    }
-}
-
-/* Small Phones */
-@media (max-width: 360px) {
-    .prayer-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .countdown-num {
-        font-size: 1.6rem;
-    }
-
-    .date-strip {
-        flex-direction: column;
-    }
-
-    .date-chip {
-        min-width: unset;
-    }
-
     .prayer-table {
-        font-size: 0.7rem;
+        font-size: 11px;
     }
 
     .prayer-table th,
     .prayer-table td {
-        padding: 8px 4px;
+        border: 1px solid #ddd;
     }
 }
 
-/* Landscape phones */
-@media (max-height: 500px) and (orientation: landscape) {
-    .countdown-hero {
-        padding: 14px;
+/* ==========================================================
+   AMIRI (arabic font helper)
+   ========================================================== */
+.amiri {
+    font-family: var(--font-ar);
+    direction: rtl;
+}
+
+/* ==========================================================
+   GAME PAGE
+   ========================================================== */
+.game-container {
+    padding-bottom: 8px;
+}
+
+.game-hud {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 12px 8px;
+    margin-bottom: 12px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--card-radius);
+}
+
+.game-hud-item {
+    text-align: center;
+}
+
+.game-hud-val {
+    display: block;
+    font-size: 28px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.game-hud-val.accent {
+    color: var(--accent);
+}
+
+.game-hud-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+}
+
+.game-canvas-wrap {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--glass-border);
+    touch-action: none;
+    /* prevent scroll on touch */
+}
+
+.game-canvas-wrap canvas {
+    display: block;
+    width: 100%;
+}
+
+.game-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 14, 26, 0.88);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+.game-overlay-content {
+    text-align: center;
+    padding: 24px;
+}
+
+.game-overlay-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.game-overlay-content h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.game-overlay-content p {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+}
+
+.game-final-score {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    min-height: 22px;
+}
+
+.game-start-btn {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 14px 40px;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #fff;
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+    transition: all 0.2s;
+    animation: btnPulse 2s ease-in-out infinite;
+}
+
+.game-start-btn:active {
+    transform: scale(0.95);
+}
+
+@keyframes btnPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
     }
 
-    .countdown-num {
-        font-size: 1.6rem;
+    50% {
+        box-shadow: 0 4px 30px rgba(245, 158, 11, 0.6);
     }
+}
 
-    .prayer-grid {
-        grid-template-columns: repeat(6, 1fr);
-    }
+.game-hint {
+    font-size: 11px !important;
+    color: var(--text-dim) !important;
+    margin-top: 12px !important;
+}
+
+.game-tips {
+    margin-top: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.game-tips p {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin: 0;
+}
+
+.game-tips strong {
+    color: var(--text);
+}
+
+/* --- 6 TAB BOTTOM NAV ADJUSTMENT --- */
+.nav-item {
+    min-width: 48px;
+    padding: 6px 0;
+}
+
+.nav-item i {
+    font-size: 20px;
+}
+
+.nav-item span {
+    font-size: 9px;
 }

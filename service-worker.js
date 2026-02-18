@@ -1,10 +1,11 @@
 // Service Worker for Ramazan İmsakiye PWA
-const CACHE_NAME = 'imsakiye-v1';
+const CACHE_NAME = 'imsakiye-v7';
 const ASSETS = [
     './',
     './index.html',
     './style.css',
     './app.js',
+    './game.js',
     './embedded_data.js',
     './manifest.json',
     'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Amiri:wght@400;700&display=swap',
