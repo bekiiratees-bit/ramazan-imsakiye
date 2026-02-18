@@ -1,5 +1,5 @@
 // Service Worker for Ramazan İmsakiye PWA
-const CACHE_NAME = 'imsakiye-v8';
+const CACHE_NAME = 'imsakiye-v9';
 const ASSETS = [
     './',
     './index.html',
