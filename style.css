@@ -722,8 +722,8 @@ select {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 6px 4px; /* Reduced vertical padding */
-    gap: 4px;
+    padding: 10px 4px; /* More balanced padding */
+    gap: 6px;
     text-align: center;
     position: relative;
     animation: cardIn 0.4s ease calc(var(--delay) * 0.06s) both;
@@ -732,11 +732,11 @@ select {
 
 .pli-left {
     display: flex;
-    flex-direction: row; /* Icon to the left of text */
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
     gap: 6px;
     width: 100%;
-    justify-content: center;
 }
 
 .pli-icon-wrap {
@@ -778,7 +778,9 @@ select {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 0;
+    width: 100%;
 }
 
 .pli-time {
