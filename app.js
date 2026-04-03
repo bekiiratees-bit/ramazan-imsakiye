@@ -1103,7 +1103,15 @@ function playAdhanBeep() {
 function initNotifications() {
     const btn = document.getElementById('notifBtn');
     const icon = document.getElementById('notifIcon');
-    if (!btn || !icon) return;
+    const modal = document.getElementById('notifModal');
+    const closeBtn = document.getElementById('closeNotifModal');
+    const masterToggle = document.getElementById('masterNotifToggle');
+    const prayerListEl = document.getElementById('prayerNotifSettings');
+    const prayerCbs = document.querySelectorAll('.prayer-notif-cb');
+    
+    if (!btn || !icon || !modal) return;
+
+    let notifPrefs = JSON.parse(localStorage.getItem('notifPrefs') || '{"İmsak":true,"Güneş":true,"Öğle":true,"İkindi":true,"Akşam":true,"Yatsı":true}');
 
     function updateIcon() {
         if (notifEnabled) {
@@ -1115,37 +1123,62 @@ function initNotifications() {
         }
     }
 
-    btn.addEventListener('click', async () => {
-        if (!notifEnabled) {
-            if (!('Notification' in window)) {
-                alert('Tarayıcınız bildirimleri desteklemiyor.');
-                return;
-            }
-            if (Notification.permission === 'granted') {
+    function renderModalState() {
+        masterToggle.checked = notifEnabled;
+        if (notifEnabled) prayerListEl.classList.add('active');
+        else prayerListEl.classList.remove('active');
+        
+        prayerCbs.forEach(cb => {
+            cb.checked = notifPrefs[cb.value] !== false;
+        });
+    }
+
+    btn.addEventListener('click', () => {
+        renderModalState();
+        modal.classList.add('active');
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+    });
+
+    masterToggle.addEventListener('change', async (e) => {
+        if (e.target.checked) {
+            const req = async () => {
+                if (!('Notification' in window)) return false;
+                if (Notification.permission === 'granted') return true;
+                if (Notification.permission !== 'denied') {
+                    const p = await Notification.requestPermission();
+                    return p === 'granted';
+                }
+                return false;
+            };
+            const granted = await req();
+            if (granted) {
                 notifEnabled = true;
                 localStorage.setItem('notifEnabled', 'true');
+                prayerListEl.classList.add('active');
                 scheduleNotifications();
                 updateIcon();
-                playAdhanBeep(); // Audio Context'i aktifleştirmek için
-            } else if (Notification.permission !== 'denied') {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                    notifEnabled = true;
-                    localStorage.setItem('notifEnabled', 'true');
-                    scheduleNotifications();
-                    updateIcon();
-                    playAdhanBeep(); // Audio Context'i aktifleştirmek için
-                } else {
-                    alert('Bildirim izni verilmedi.');
-                }
+                playAdhanBeep(); 
             } else {
-                alert('Bildirim izni engellenmiş. Lütfen tarayıcı ayarlarından izin verin.');
+                e.target.checked = false;
+                alert('Bildirim izni gerekli.');
             }
         } else {
             notifEnabled = false;
             localStorage.setItem('notifEnabled', 'false');
+            prayerListEl.classList.remove('active');
             updateIcon();
         }
+    });
+
+    prayerCbs.forEach(cb => {
+        cb.addEventListener('change', (e) => {
+            notifPrefs[e.target.value] = e.target.checked;
+            localStorage.setItem('notifPrefs', JSON.stringify(notifPrefs));
+            scheduleNotifications();
+        });
     });
 
     updateIcon();
@@ -1165,6 +1198,7 @@ function initNotifications() {
         
         const prayers = [
             { name: 'İmsak', time: formatTime(today.fajr) },
+            { name: 'Güneş', time: formatTime(today.sun) },
             { name: 'Öğle', time: formatTime(today.dhuhr) },
             { name: 'İkindi', time: formatTime(today.asr) },
             { name: 'Akşam', time: formatTime(today.maghrib) },
@@ -1173,11 +1207,13 @@ function initNotifications() {
         
         for (let p of prayers) {
             if (p.time === hm) {
-                const lastNotified = localStorage.getItem('lastNotifiedTime');
-                if (lastNotified !== hm) {
-                    showLocalNotification(p.name, p.time, currentCity);
-                    localStorage.setItem('lastNotifiedTime', hm);
-                    playAdhanBeep();
+                if (notifPrefs[p.name] !== false) {
+                    const lastNotified = localStorage.getItem('lastNotifiedTime');
+                    if (lastNotified !== hm) {
+                        showLocalNotification(p.name, p.time, currentCity);
+                        localStorage.setItem('lastNotifiedTime', hm);
+                        playAdhanBeep();
+                    }
                 }
             }
         }
