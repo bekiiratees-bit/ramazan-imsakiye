@@ -102,27 +102,31 @@
             <!-- ===== PAGE: HOME (Vakitler) ===== -->
             <div class="page active" id="page-home">
 
-                <!-- Date & Info Row -->
-                <div class="info-row">
-                    <div class="info-chip"><i class="ri-calendar-line"></i> <span id="gregorianDate">--</span></div>
-                    <div class="info-chip highlight"><i class="ri-time-line"></i> <span id="hijriDate">--</span></div>
-                </div>
-
-                <!-- Kurban Bayramı Countdown -->
-                <div class="kurban-countdown glass-card" id="kurbanCard">
-                    <div class="kurban-header">
-                        <div class="kurban-icon">🐑</div>
-                        <div class="kurban-info">
-                            <span class="kurban-title">Kurban Bayramı'na</span>
-                            <span class="kurban-date">27 Mayıs 2026</span>
-                        </div>
-                        <div class="kurban-days-wrap">
-                            <span class="kurban-days" id="kurbanDays">--</span>
-                            <span class="kurban-days-label">GÜN</span>
+                <!-- Top Row Grid (Date & Kurban) -->
+                <div class="top-row-grid">
+                    <div class="date-card glass-card">
+                        <div class="date-icon"><i class="ri-calendar-event-line"></i></div>
+                        <div class="date-texts">
+                            <span id="gregorianDate" class="date-gregorian">--</span>
+                            <span id="hijriDate" class="date-hijri">--</span>
                         </div>
                     </div>
-                    <div class="kurban-progress-track">
-                        <div class="kurban-progress-fill" id="kurbanProgress"></div>
+                    
+                    <div class="kurban-countdown glass-card" id="kurbanCard">
+                        <div class="kurban-header">
+                            <div class="kurban-icon">🐑</div>
+                            <div class="kurban-info">
+                                <span class="kurban-title">Kurban'a Kalan</span>
+                                <span class="kurban-date">27 Mayıs 2026</span>
+                            </div>
+                            <div class="kurban-days-wrap">
+                                <span class="kurban-days" id="kurbanDays">--</span>
+                                <span class="kurban-days-label">GÜN</span>
+                            </div>
+                        </div>
+                        <div class="kurban-progress-track">
+                            <div class="kurban-progress-fill" id="kurbanProgress"></div>
+                        </div>
                     </div>
                 </div>
 

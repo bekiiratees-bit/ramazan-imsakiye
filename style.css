@@ -397,32 +397,68 @@ select {
 /* ==========================================================
    HOME PAGE
    ========================================================== */
-.info-row {
+.top-row-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.date-card {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 12px;
     gap: 8px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
+    position: relative;
+    overflow: hidden;
 }
 
-.info-chip {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    padding: 6px 12px;
-    background: var(--surface);
-    border-radius: 20px;
-    color: var(--text-dim);
-}
-
-.info-chip.highlight {
+.date-icon {
+    font-size: 20px;
     color: var(--accent);
-    background: rgba(99, 102, 241, 0.12);
+    opacity: 0.8;
 }
 
-.info-chip i {
-    font-size: 14px;
+.date-texts {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
+
+.date-gregorian {
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.date-hijri {
+    font-size: 10px;
+    color: var(--text-dim);
+    line-height: 1.2;
+}
+
+/* Adjust kurban countdown to fit perfectly inside the grid cell */
+.top-row-grid .kurban-countdown {
+    margin-bottom: 0 !important;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+}
+
+.top-row-grid .kurban-header {
+    margin-bottom: 0;
+    gap: 8px;
+}
+
+.top-row-grid .kurban-icon { font-size: 18px; }
+.top-row-grid .kurban-title { font-size: 10px; }
+.top-row-grid .kurban-date { font-size: 8px; }
+.top-row-grid .kurban-days-wrap { padding: 4px 8px; min-width: 44px; }
+.top-row-grid .kurban-days { font-size: 18px; }
+.top-row-grid .kurban-days-label { font-size: 8px; margin-top: 2px;}
 
 /* ==========================================================
    KURBAN BAYRAMI COUNTDOWN
