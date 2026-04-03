@@ -722,8 +722,8 @@ select {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 12px 6px;
-    gap: 6px;
+    padding: 6px 4px; /* Reduced vertical padding */
+    gap: 4px;
     text-align: center;
     position: relative;
     animation: cardIn 0.4s ease calc(var(--delay) * 0.06s) both;
@@ -732,19 +732,21 @@ select {
 
 .pli-left {
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Icon to the left of text */
     align-items: center;
     gap: 6px;
+    width: 100%;
+    justify-content: center;
 }
 
 .pli-icon-wrap {
-    width: 36px;
-    height: 36px;
-    border-radius: 12px;
+    width: 28px; /* Slightly smaller for row layout */
+    height: 28px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 14px;
     flex-shrink: 0;
     transition: all 0.3s;
 }
@@ -763,9 +765,9 @@ select {
 }
 
 .pli-name {
-    font-size: 13px;
+    font-size: 11px; /* Slightly smaller to fit in row */
     font-weight: 700;
-    letter-spacing: 0.2px;
+    letter-spacing: 0.1px;
 }
 
 .pli-desc {
