@@ -1,7 +1,7 @@
 {
-    "name": "Ramazan İmsakiyesi 2026",
-    "short_name": "İmsakiye",
-    "description": "81 il için Diyanet kaynaklı namaz vakitleri, geri sayım ve günlük ayetler",
+    "name": "Ezan Vakti Pro",
+    "short_name": "Vakitler",
+    "description": "81 il için Diyanet kaynaklı günlük namaz vakitleri, kıble pusulası ve tesbih",
     "start_url": "./index.html",
     "display": "standalone",
     "orientation": "portrait",

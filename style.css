@@ -1,5 +1,5 @@
 /* ==========================================================
-   RAMAZAN İMSAKİYE 2026 — PREMIUM STYLES
+   EZAN VAKTİ PRO — Premium Styles
    ========================================================== */
 
 /* --- CSS VARIABLES --- */
@@ -9,8 +9,9 @@
     --surface-hover: rgba(255, 255, 255, 0.1);
     --text: #f1f5f9;
     --text-dim: rgba(255, 255, 255, 0.5);
-    --accent: #f59e0b;
-    --accent-glow: rgba(245, 158, 11, 0.3);
+    --accent: #6366f1;
+    --accent2: #a855f7;
+    --accent-glow: rgba(99, 102, 241, 0.3);
     --success: #22c55e;
     --danger: #ef4444;
     --glass: rgba(255, 255, 255, 0.05);
@@ -30,6 +31,7 @@
     --glass: rgba(255, 255, 255, 0.7);
     --glass-border: rgba(0, 0, 0, 0.08);
     --nav-bg: rgba(240, 244, 248, 0.92);
+    --accent: #4f46e5;
 }
 
 /* --- RESET --- */
@@ -69,7 +71,7 @@ select {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: linear-gradient(135deg, #0a0e1a 0%, #1a1040 50%, #0a0e1a 100%);
+    background: linear-gradient(135deg, #0a0e1a 0%, #1a1040 50%, #0d1128 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,7 +93,7 @@ select {
 }
 
 .splash-logo svg {
-    filter: drop-shadow(0 0 24px rgba(245, 158, 11, 0.4));
+    filter: drop-shadow(0 0 28px rgba(99, 102, 241, 0.5));
 }
 
 .splash-moon {
@@ -115,10 +117,10 @@ select {
 }
 
 .splash-title {
-    font-size: 36px;
+    font-size: 32px;
     font-weight: 800;
-    letter-spacing: 2px;
-    background: linear-gradient(135deg, #f59e0b, #fbbf24, #f59e0b);
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #6366f1, #a855f7, #818cf8);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -126,9 +128,9 @@ select {
 }
 
 .splash-subtitle {
-    font-size: 13px;
-    letter-spacing: 6px;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: rgba(255, 255, 255, 0.4);
     margin-top: 4px;
     animation: splashTextIn 0.6s ease-out 0.35s both;
 }
@@ -145,7 +147,7 @@ select {
 .splash-loader-bar {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #f59e0b, #ef4444);
+    background: linear-gradient(90deg, #6366f1, #a855f7);
     border-radius: 3px;
     animation: splashLoad 1.3s ease-out forwards;
 }
@@ -206,12 +208,10 @@ select {
     0%,
     100% {
         opacity: 0.3;
-        r: 2;
     }
 
     50% {
         opacity: 1;
-        r: 3.5;
     }
 }
 
@@ -261,13 +261,17 @@ select {
 }
 
 .logo strong {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 700;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .logo small {
     display: block;
-    font-size: 10px;
+    font-size: 9px;
     color: var(--text-dim);
     letter-spacing: 2px;
 }
@@ -391,7 +395,7 @@ select {
 }
 
 /* ==========================================================
-   HOME PAGE — info row, progress, countdown, prayer cards
+   HOME PAGE
    ========================================================== */
 .info-row {
     display: flex;
@@ -413,43 +417,104 @@ select {
 
 .info-chip.highlight {
     color: var(--accent);
-    background: rgba(245, 158, 11, 0.12);
+    background: rgba(99, 102, 241, 0.12);
 }
 
 .info-chip i {
     font-size: 14px;
 }
 
-/* Progress */
-.progress-section {
+/* ==========================================================
+   KURBAN BAYRAMI COUNTDOWN
+   ========================================================== */
+.kurban-countdown {
     margin-bottom: 16px;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(5, 150, 105, 0.08));
+    border-color: rgba(16, 185, 129, 0.25);
 }
 
-.progress-header {
+.kurban-header {
     display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 6px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
 }
 
-.progress-bar {
-    height: 6px;
-    background: var(--surface);
-    border-radius: 3px;
+.kurban-icon {
+    font-size: 32px;
+    animation: kurbanPulse 2s ease-in-out infinite;
+}
+
+@keyframes kurbanPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+}
+
+.kurban-info {
+    flex: 1;
+}
+
+.kurban-title {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    color: #10b981;
+    letter-spacing: 0.5px;
+}
+
+.kurban-date {
+    display: block;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+}
+
+.kurban-days-wrap {
+    text-align: center;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 12px;
+    padding: 10px 16px;
+    min-width: 72px;
+}
+
+.kurban-days {
+    display: block;
+    font-size: 32px;
+    font-weight: 800;
+    color: #10b981;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.kurban-days-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #10b981;
+    opacity: 0.7;
+}
+
+.kurban-progress-track {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
     overflow: hidden;
 }
 
-.progress-fill {
+.kurban-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #f59e0b, #22c55e);
-    border-radius: 3px;
-    transition: width 0.6s ease;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    border-radius: 2px;
+    transition: width 0.8s ease;
 }
 
-/* Countdown — Professional Card Design */
+/* ==========================================================
+   COUNTDOWN — Professional Card
+   ========================================================== */
 .countdown-card {
-    padding: 16px 16px 16px;
+    padding: 16px;
     margin-bottom: 16px;
 }
 
@@ -488,8 +553,8 @@ select {
 }
 
 .cd-pill.active {
-    background: rgba(245, 158, 11, 0.15);
-    border-color: rgba(245, 158, 11, 0.4);
+    background: rgba(99, 102, 241, 0.15);
+    border-color: rgba(99, 102, 241, 0.4);
     color: var(--accent);
 }
 
@@ -508,7 +573,7 @@ select {
     width: 28px;
     height: 28px;
     border-radius: 8px;
-    background: rgba(245, 158, 11, 0.15);
+    background: rgba(99, 102, 241, 0.15);
     color: var(--accent);
     font-size: 14px;
 }
@@ -542,8 +607,8 @@ select {
 }
 
 .cd-block.accent-block {
-    border-color: rgba(245, 158, 11, 0.35);
-    background: rgba(245, 158, 11, 0.06);
+    border-color: rgba(99, 102, 241, 0.35);
+    background: rgba(99, 102, 241, 0.06);
 }
 
 .cd-num {
@@ -593,7 +658,7 @@ select {
 
 .cd-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--accent), #ef4444);
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
     border-radius: 2px;
     transition: width 1s linear;
     width: 0;
@@ -612,268 +677,134 @@ select {
     }
 }
 
-/* Fasting — Modern Ring Card */
-.fasting-card {
-    margin-bottom: 16px;
-    padding: 16px;
-}
-
-.fasting-ring-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 14px;
-}
-
-.fasting-ring-wrap {
-    position: relative;
-    width: 80px;
-    height: 80px;
-    flex-shrink: 0;
-}
-
-.fasting-ring {
-    width: 80px;
-    height: 80px;
-    transform: rotate(-90deg);
-}
-
-.fasting-ring-bg {
-    fill: none;
-    stroke: rgba(255, 255, 255, 0.06);
-    stroke-width: 6;
-}
-
-.fasting-ring-fill {
-    fill: none;
-    stroke: url(#fastingGradient);
-    stroke: var(--accent);
-    stroke-width: 6;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 1s ease;
-}
-
-.fasting-ring-text {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.fasting-pct {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--accent);
-    font-family: 'Outfit', sans-serif;
-}
-
-.fasting-info {
-    flex: 1;
-}
-
-.fasting-title {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-bottom: 4px;
-    letter-spacing: 0.5px;
-}
-
-.fasting-dur {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 6px;
-}
-
-.fasting-times {
-    display: flex;
-    gap: 14px;
-    font-size: 12px;
-    color: var(--text-dim);
-}
-
-.fasting-times i {
-    color: var(--accent);
-    margin-right: 2px;
-}
-
-.fasting-bar-track {
-    height: 4px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.fasting-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), #ef4444);
-    border-radius: 2px;
-    transition: width 0.5s ease;
-    width: 0;
-}
-
-/* Ramazan Info Card */
-.ramazan-info {
-    margin-bottom: 16px;
-    padding: 14px 12px;
-}
-
-.rinfo-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-}
-
-.rinfo-item {
+/* ==========================================================
+   PRAYER LIST — Modern Full-Width Cards
+   ========================================================== */
+.prayer-list {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    text-align: center;
-}
-
-.rinfo-item i {
-    font-size: 18px;
-    color: var(--accent);
-    margin-bottom: 2px;
-}
-
-.rinfo-label {
-    font-size: 10px;
-    color: var(--text-dim);
-    letter-spacing: 0.5px;
-}
-
-.rinfo-val {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--text);
-}
-
-.rinfo-divider {
-    width: 1px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.06);
-}
-
-.rinfo-bayram {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 8px;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    font-size: 13px;
-    color: var(--text-dim);
+    margin-bottom: 16px;
 }
 
-.rinfo-bayram i {
-    color: var(--accent);
-    font-size: 16px;
-}
-
-.rinfo-bayram strong {
-    color: var(--accent);
-    font-weight: 700;
-}
-
-/* Dua Cards */
-.dua-section {
+.prayer-list-item {
     display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.dua-card {
-    padding: 16px;
-    text-align: center;
-}
-
-.dua-badge {
-    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    padding: 4px 12px;
-    border-radius: 12px;
-    margin-bottom: 12px;
-}
-
-.dua-badge.sahur {
-    background: rgba(99, 102, 241, 0.15);
-    color: #818cf8;
-}
-
-.dua-badge.iftar {
-    background: rgba(245, 158, 11, 0.15);
-    color: var(--accent);
-}
-
-.dua-arabic {
-    font-family: 'Amiri', serif;
-    font-size: 18px;
-    line-height: 2;
-    color: var(--text);
-    direction: rtl;
-    margin-bottom: 10px;
-}
-
-.dua-turkish {
-    font-size: 13px;
-    color: var(--text-dim);
-    line-height: 1.6;
-    font-style: italic;
-}
-
-/* Prayer Cards */
-.prayer-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 16px;
-}
-
-.prayer-card {
-    text-align: center;
-    padding: 14px 8px;
-    animation: cardIn 0.4s ease calc(var(--delay) * 0.08s) both;
+    justify-content: space-between;
+    padding: 14px 16px;
+    animation: cardIn 0.4s ease calc(var(--delay) * 0.06s) both;
     transition: all 0.3s;
 }
 
-.prayer-card i {
+.pli-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.pli-icon-wrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 20px;
-    color: var(--text-dim);
-    display: block;
-    margin-bottom: 4px;
+    flex-shrink: 0;
+    transition: all 0.3s;
 }
 
-.prayer-card .p-name {
-    display: block;
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-    margin-bottom: 4px;
+.pli-icon-fajr   { background: rgba(99, 102, 241, 0.12); color: #818cf8; }
+.pli-icon-sun    { background: rgba(251, 191, 36, 0.12); color: #fbbf24; }
+.pli-icon-dhuhr  { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.pli-icon-asr    { background: rgba(249, 115, 22, 0.12); color: #f97316; }
+.pli-icon-maghrib{ background: rgba(168, 85, 247, 0.12); color: #a855f7; }
+.pli-icon-isha   { background: rgba(99, 102, 241, 0.12); color: #6366f1; }
+
+.pli-texts {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
-.prayer-card .p-time {
-    font-size: 18px;
+.pli-name {
+    font-size: 16px;
     font-weight: 700;
+    letter-spacing: 0.3px;
 }
 
-.prayer-card.active {
-    border-color: var(--accent);
+.pli-desc {
+    font-size: 11px;
+    color: var(--text-dim);
+}
+
+.pli-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.pli-time {
+    font-size: 22px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.5px;
+}
+
+.pli-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: transparent;
+    transition: all 0.3s;
+    align-self: flex-end;
+}
+
+.pli-indicator.ind-active {
+    background: var(--success);
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+}
+
+.pli-indicator.ind-next {
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+    animation: indPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes indPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.7; }
+}
+
+/* Active prayer card highlight */
+.prayer-list-item.active {
+    border-color: rgba(34, 197, 94, 0.35);
+    background: rgba(34, 197, 94, 0.06);
+    box-shadow: 0 0 20px rgba(34, 197, 94, 0.08);
+}
+
+.prayer-list-item.active .pli-name {
+    color: var(--success);
+}
+
+.prayer-list-item.active .pli-time {
+    color: var(--success);
+}
+
+/* Next prayer highlight */
+.prayer-list-item.next-prayer {
+    border-color: rgba(99, 102, 241, 0.35);
+    background: rgba(99, 102, 241, 0.06);
     box-shadow: 0 0 20px var(--accent-glow);
 }
 
-.prayer-card.active i,
-.prayer-card.active .p-name {
+.prayer-list-item.next-prayer .pli-time {
     color: var(--accent);
+}
+
+.prayer-list-item.next-prayer .pli-icon-wrap {
+    box-shadow: 0 0 12px var(--accent-glow);
 }
 
 @keyframes cardIn {
@@ -926,6 +857,57 @@ select {
     font-size: 11px;
     font-weight: 600;
     color: var(--accent);
+}
+
+/* Dua Cards */
+.dua-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.dua-card {
+    padding: 16px;
+    text-align: center;
+}
+
+.dua-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+
+.dua-badge.sabah {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+}
+
+.dua-badge.aksam {
+    background: rgba(99, 102, 241, 0.15);
+    color: #818cf8;
+}
+
+.dua-arabic {
+    font-family: 'Amiri', serif;
+    font-size: 18px;
+    line-height: 2;
+    color: var(--text);
+    direction: rtl;
+    margin-bottom: 10px;
+}
+
+.dua-turkish {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    font-style: italic;
 }
 
 /* ==========================================================
@@ -1089,7 +1071,7 @@ select {
 
 .hatim-progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #f59e0b, #22c55e);
+    background: linear-gradient(90deg, #6366f1, #a855f7);
     border-radius: 3px;
     transition: width 0.4s ease;
 }
@@ -1150,74 +1132,6 @@ select {
     background: var(--surface-hover);
 }
 
-/* --- Journal --- */
-.journal-date-nav {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-bottom: 12px;
-}
-
-.journal-date-nav span {
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.journal-textarea {
-    width: 100%;
-    padding: 14px;
-    border-radius: 12px;
-    background: var(--surface);
-    border: 1px solid var(--glass-border);
-    color: var(--text);
-    font-family: var(--font);
-    font-size: 14px;
-    line-height: 1.6;
-    resize: vertical;
-    outline: none;
-    transition: border-color 0.2s;
-    min-height: 100px;
-}
-
-.journal-textarea:focus {
-    border-color: var(--accent);
-}
-
-.journal-textarea::placeholder {
-    color: var(--text-dim);
-}
-
-.btn-save {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 10px;
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    background: linear-gradient(135deg, #f59e0b, #ef4444);
-    transition: all 0.2s;
-}
-
-.btn-save:active {
-    transform: scale(0.96);
-}
-
-.journal-saved-msg {
-    font-size: 12px;
-    color: var(--success);
-    margin-top: 8px;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.journal-saved-msg.show {
-    opacity: 1;
-}
-
 /* --- Achievements --- */
 .streak-display {
     display: flex;
@@ -1226,7 +1140,7 @@ select {
     gap: 12px;
     margin-bottom: 20px;
     padding: 16px;
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(239, 68, 68, 0.1));
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.1));
     border-radius: 14px;
 }
 
@@ -1280,8 +1194,8 @@ select {
 }
 
 .badge-item.unlocked {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
-    border: 1px solid rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.05));
+    border: 1px solid rgba(99, 102, 241, 0.3);
 }
 
 .badge-item.locked {
@@ -1399,7 +1313,7 @@ select {
     border-radius: 50%;
     font-size: 32px;
     font-weight: 700;
-    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    background: linear-gradient(135deg, #6366f1, #a855f7);
     color: #fff;
     box-shadow: 0 4px 20px var(--accent-glow);
     transition: all 0.15s;
@@ -1427,7 +1341,7 @@ select {
 }
 
 .step.active {
-    background: rgba(245, 158, 11, 0.2);
+    background: rgba(99, 102, 241, 0.2);
     color: var(--accent);
     font-weight: 600;
 }
@@ -1466,7 +1380,7 @@ select {
 
 .tab.active {
     background: var(--accent);
-    color: #000;
+    color: #fff;
 }
 
 .table-scroll {
@@ -1501,20 +1415,12 @@ select {
 }
 
 .prayer-table .today-row {
-    background: rgba(245, 158, 11, 0.1);
+    background: rgba(99, 102, 241, 0.1);
 }
 
 .prayer-table .today-row td {
     color: var(--accent);
     font-weight: 600;
-}
-
-.prayer-table .kadir-row {
-    background: rgba(168, 85, 247, 0.12);
-}
-
-.prayer-table .kadir-row td:first-child::after {
-    content: ' ✨';
 }
 
 /* ==========================================================
@@ -1543,16 +1449,20 @@ select {
     align-items: center;
     gap: 2px;
     padding: 6px 0;
-    min-width: 56px;
-    font-size: 10px;
+    min-width: 48px;
+    font-size: 9px;
     font-weight: 500;
     color: var(--text-dim);
     transition: all 0.2s;
 }
 
 .nav-item i {
-    font-size: 22px;
+    font-size: 20px;
     transition: all 0.2s;
+}
+
+.nav-item span {
+    font-size: 9px;
 }
 
 .nav-item.active {
@@ -1577,7 +1487,7 @@ select {
     position: absolute;
     width: 3px;
     height: 3px;
-    background: rgba(245, 158, 11, 0.4);
+    background: rgba(99, 102, 241, 0.4);
     border-radius: 50%;
     animation: twinkle var(--d, 3s) ease-in-out infinite;
 }
@@ -1747,7 +1657,7 @@ select {
     font-size: 22px;
     font-weight: 800;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    background: linear-gradient(135deg, #6366f1, #a855f7);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1775,8 +1685,8 @@ select {
     font-weight: 800;
     letter-spacing: 2px;
     color: #fff;
-    background: linear-gradient(135deg, #f59e0b, #ef4444);
-    box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    box-shadow: 0 4px 20px var(--accent-glow);
     transition: all 0.2s;
     animation: btnPulse 2s ease-in-out infinite;
 }
@@ -1789,11 +1699,11 @@ select {
 
     0%,
     100% {
-        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
     }
 
     50% {
-        box-shadow: 0 4px 30px rgba(245, 158, 11, 0.6);
+        box-shadow: 0 4px 30px rgba(99, 102, 241, 0.6);
     }
 }
 
@@ -1801,38 +1711,6 @@ select {
     font-size: 11px !important;
     color: var(--text-dim) !important;
     margin-top: 12px !important;
-}
-
-.game-tips {
-    margin-top: 12px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.game-tips p {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin: 0;
-}
-
-.game-tips strong {
-    color: var(--text);
-}
-
-/* --- 6 TAB BOTTOM NAV ADJUSTMENT --- */
-.nav-item {
-    min-width: 48px;
-    padding: 6px 0;
-}
-
-.nav-item i {
-    font-size: 20px;
-}
-
-.nav-item span {
-    font-size: 9px;
 }
 
 .app-footer {
@@ -1844,8 +1722,4 @@ select {
     opacity: 0.6;
     margin-bottom: 0;
     padding-bottom: 0;
-}
-
-#page-game.active~.app-footer {
-    display: none;
 }

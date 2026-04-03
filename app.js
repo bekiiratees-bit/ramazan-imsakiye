@@ -1,5 +1,5 @@
 // ===========================================================
-// RAMAZAN İMSAKİYE 2026 - PREMIUM APP
+// EZAN VAKTİ PRO — Premium App
 // Kaynak: Diyanet İşleri Başkanlığı (Gömülü Veri)
 // ===========================================================
 
@@ -72,9 +72,8 @@ const CITY_COORDS = {
     "Yalova": [40.65, 29.28], "Yozgat": [39.82, 34.80], "Zonguldak": [41.45, 31.79]
 };
 
-// --- QURAN VERSES ---
+// --- QURAN VERSES (Varied, not Ramadan-specific) ---
 const VERSES = [
-    { ar: "شَهْرُ رَمَضَانَ الَّذِي أُنزِلَ فِيهِ الْقُرْآنُ هُدًى لِّلنَّاسِ", tr: "Ramazan ayı, insanlara yol gösterici olan Kur'an'ın indirildiği aydır.", ref: "Bakara 185" },
     { ar: "وَاسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ", tr: "Sabır ve namaz ile Allah'tan yardım isteyin.", ref: "Bakara 45" },
     { ar: "ادْعُونِي أَسْتَجِبْ لَكُمْ", tr: "Bana dua edin, size karşılık vereyim.", ref: "Mü'min 60" },
     { ar: "إِنَّ اللَّهَ مَعَ الصَّابِرِينَ", tr: "Şüphesiz Allah, sabredenlerle beraberdir.", ref: "Bakara 153" },
@@ -83,28 +82,32 @@ const VERSES = [
     { ar: "وَلَذِكْرُ اللَّهِ أَكْبَرُ", tr: "Allah'ı anmak en büyük ibadettir.", ref: "Ankebût 45" },
     { ar: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً", tr: "Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver.", ref: "Bakara 201" },
     { ar: "وَنُنَزِّلُ مِنَ الْقُرْآنِ مَا هُوَ شِفَاءٌ وَرَحْمَةٌ لِّلْمُؤْمِنِينَ", tr: "Biz Kur'an'dan, müminler için şifa ve rahmet olan şeyler indiririz.", ref: "İsrâ 82" },
-    { ar: "إِنَّا أَعْطَيْنَاكَ الْكَوْثَرَ", tr: "Şüphesiz biz sana Kevser'i verdik.", ref: "Kevser 1" },
+    { ar: "حَافِظُوا عَلَى الصَّلَوَاتِ وَالصَّلَاةِ الْوُسْطَىٰ", tr: "Namazları ve özellikle orta namazı (ikindi) koruyun.", ref: "Bakara 238" },
+    { ar: "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ", tr: "Namazı dosdoğru kılın, zekâtı verin.", ref: "Bakara 43" },
+    { ar: "يَا أَيُّهَا الَّذِينَ آمَنُوا اسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ", tr: "Ey inananlar! Sabır ve namazla yardım isteyin.", ref: "Bakara 153" },
+    { ar: "إِنَّ الصَّلَاةَ كَانَتْ عَلَى الْمُؤْمِنِينَ كِتَابًا مَّوْقُوتًا", tr: "Namaz, müminlere vakitleri belirlenmiş bir farzdır.", ref: "Nisa 103" },
 ];
 
-// --- RAMADAN DATES ---
-const RAMADAN_START = new Date(2026, 1, 19); // 19 Şubat 2026
-const RAMADAN_END = new Date(2026, 2, 20);   // 20 Mart 2026 (Bayram başlangıç)
-const BAYRAM_END = new Date(2026, 2, 23);    // 22 Mart 2026 (Bayram sonu, dahil)
-const KADIR_NIGHT_DATE = new Date(2026, 2, 16); // 16 Mart 2026
+// --- KURBAN BAYRAMI DATE ---
+// Kurban Bayramı 2026: 27 Mayıs - 30 Mayıs 2026
+const KURBAN_BAYRAMI_START = new Date(2026, 4, 27); // May 27, 2026
+const KURBAN_BAYRAMI_END   = new Date(2026, 4, 30); // May 30, 2026
+// Alias for countdown
+const KURBAN_BAYRAMI = KURBAN_BAYRAMI_START;
+// Reference date for progress bar
+const YEAR_START = new Date(2026, 0, 1);
 
 // --- ACHIEVEMENTS DEFINITION ---
 const BADGE_DEFS = [
-    { id: 'first_fast', icon: '🌙', name: 'İlk Oruç', desc: 'İlk ibadeti kaydet', check: (s) => s.totalWorshipDays >= 1 },
+    { id: 'first_worship', icon: '🕌', name: 'İlk İbadet', desc: 'İlk ibadeti kaydet', check: (s) => s.totalWorshipDays >= 1 },
     { id: 'streak_3', icon: '🔥', name: '3 Gün Seri', desc: '3 gün üst üste', check: (s) => s.streak >= 3 },
     { id: 'streak_7', icon: '⚡', name: '7 Gün Seri', desc: '7 gün üst üste', check: (s) => s.streak >= 7 },
     { id: 'streak_15', icon: '💎', name: '15 Gün Seri', desc: '15 gün üst üste', check: (s) => s.streak >= 15 },
-    { id: 'streak_30', icon: '👑', name: '30 Gün Seri', desc: 'Tüm Ramazan', check: (s) => s.streak >= 30 },
+    { id: 'streak_30', icon: '👑', name: '30 Gün Seri', desc: '30 gün kesintisiz', check: (s) => s.streak >= 30 },
     { id: 'full_day', icon: '⭐', name: 'Tam Gün', desc: 'Tüm ibadetleri tamamla', check: (s) => s.hasFullDay },
     { id: 'hatim_10', icon: '📖', name: '10 Cüz', desc: '10 cüz oku', check: (s) => s.hatimDone >= 10 },
     { id: 'hatim_20', icon: '📚', name: '20 Cüz', desc: '20 cüz oku', check: (s) => s.hatimDone >= 20 },
     { id: 'hatim_full', icon: '🏆', name: 'Hatim', desc: '30 cüzü tamamla', check: (s) => s.hatimDone >= 30 },
-    { id: 'journal_5', icon: '✍️', name: 'Yazar', desc: '5 gün günlük yaz', check: (s) => s.journalDays >= 5 },
-    { id: 'journal_15', icon: '📝', name: 'Günlükçü', desc: '15 gün günlük yaz', check: (s) => s.journalDays >= 15 },
     { id: 'tesbih_99', icon: '📿', name: 'Tesbih', desc: '99 tesbih tamamla', check: (s) => s.tesbihComplete >= 1 },
 ];
 
@@ -134,7 +137,10 @@ function formatDateLabel(dt) {
     return `${dt.getDate()} ${monthsTr[dt.getMonth()]} ${daysTr[dt.getDay()]}`;
 }
 function dateKey(dt) {
-    return dt.toISOString().split('T')[0];
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, '0');
+    const d = String(dt.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
 }
 
 // ==========================================================
@@ -185,22 +191,17 @@ function updateDisplay() {
     let today = prayerTimings.find(d => d.date && d.date.startsWith(todayStr));
     if (!today) today = prayerTimings[0];
 
-    // Prayer times
-    document.getElementById('time-fajr').textContent = today.fajr || '--:--';
-    document.getElementById('time-sun').textContent = today.sun || '--:--';
-    document.getElementById('time-dhuhr').textContent = today.dhuhr || '--:--';
-    document.getElementById('time-asr').textContent = today.asr || '--:--';
-    document.getElementById('time-maghrib').textContent = today.maghrib || '--:--';
-    document.getElementById('time-isha').textContent = today.isha || '--:--';
+    // Prayer times — ensure proper HH:MM format
+    document.getElementById('time-fajr').textContent = formatTime(today.fajr);
+    document.getElementById('time-sun').textContent = formatTime(today.sun);
+    document.getElementById('time-dhuhr').textContent = formatTime(today.dhuhr);
+    document.getElementById('time-asr').textContent = formatTime(today.asr);
+    document.getElementById('time-maghrib').textContent = formatTime(today.maghrib);
+    document.getElementById('time-isha').textContent = formatTime(today.isha);
 
-    // Date
+    // Date & Hijri
     document.getElementById('gregorianDate').textContent = formatDateLabel(now);
-
-    // Ramadan progress
-    updateRamadanProgress(now);
-
-    // Fasting duration
-    updateFastingDuration(today);
+    document.getElementById('hijriDate').textContent = getHijriDateStr(now);
 
     // Verse
     const vIdx = now.getDate() % VERSES.length;
@@ -214,129 +215,77 @@ function updateDisplay() {
     // Countdown
     startCountdown(today, now);
 
-    // Bayram namazı
-    updateBayramNamazi(now);
+    // Kurban Bayramı countdown
+    updateKurbanCountdown(now);
 
     // Table
     renderTable(7);
 }
 
 // ==========================================================
-// BAYRAM NAMAZI
+// FORMAT TIME (ensure HH:MM)
 // ==========================================================
-// Bayram Namazı: always visible for selected city (Target: March 20)
-function updateBayramNamazi(now) {
-    const bayramEl = document.getElementById('bayramNamazi');
-    const bayramTime = document.getElementById('bayramNamaziTime');
-    if (!bayramEl || !bayramTime) return;
-    if (!prayerTimings) return;
+function formatTime(timeStr) {
+    if (!timeStr) return '--:--';
+    // already correct format
+    if (/^\d{2}:\d{2}$/.test(timeStr)) return timeStr;
+    // try to parse single digit hours: "5:30" -> "05:30"
+    const parts = timeStr.split(':');
+    if (parts.length === 2) {
+        return String(parts[0]).padStart(2, '0') + ':' + String(parts[1]).padStart(2, '0');
+    }
+    return timeStr;
+}
 
-    // Find the first day of Bayram (March 20, 2026)
-    // RAMADAN_END is March 20 (Bayram 1. Day)
-    const bayramDate = new Date(2026, 2, 20);
-    const key = dateKey(bayramDate);
-    const bayramDay = prayerTimings.find(d => d.date && d.date.startsWith(key));
+// ==========================================================
+// HIJRI DATE (approximate calculation)
+// ==========================================================
+function getHijriDateStr(date) {
+    // Use Intl API if available
+    try {
+        const hijri = new Intl.DateTimeFormat('tr-TR-u-ca-islamic', {
+            day: 'numeric', month: 'long', year: 'numeric'
+        }).format(date);
+        return hijri;
+    } catch (e) {
+        return 'Hicri Takvim';
+    }
+}
 
-    if (!bayramDay || !bayramDay.sun) {
-        bayramEl.style.display = 'none';
+// ==========================================================
+// KURBAN BAYRAMI COUNTDOWN
+// ==========================================================
+function updateKurbanCountdown(now) {
+    const kurbanEl = document.getElementById('kurbanDays');
+    const progressEl = document.getElementById('kurbanProgress');
+    if (!kurbanEl) return;
+
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const kurban = new Date(KURBAN_BAYRAMI.getFullYear(), KURBAN_BAYRAMI.getMonth(), KURBAN_BAYRAMI.getDate());
+    
+    const diffMs = kurban - today;
+    const daysLeft = Math.ceil(diffMs / 86400000);
+
+    if (daysLeft <= 0) {
+        kurbanEl.textContent = '🎉';
+        if (progressEl) progressEl.style.width = '100%';
+        const card = document.getElementById('kurbanCard');
+        if (card) {
+            const titleEl = card.querySelector('.kurban-title');
+            const daysLabelEl = card.querySelector('.kurban-days-label');
+            if (titleEl) titleEl.textContent = 'Kurban Bayramınız';
+            if (daysLabelEl) daysLabelEl.textContent = 'MÜBAREK';
+        }
         return;
     }
 
-    // Bayram namazı = Güneş (sunrise) + 45 minutes (approximation per Diyanet)
-    const [sH, sM] = bayramDay.sun.split(':').map(Number);
-    const totalMin = sH * 60 + sM + 45;
-    const bH = Math.floor(totalMin / 60);
-    const bM = totalMin % 60;
+    kurbanEl.textContent = daysLeft;
 
-    bayramTime.textContent = `${String(bH).padStart(2, '0')}:${String(bM).padStart(2, '0')}`;
-    bayramEl.style.display = 'flex';
-}
-
-// ==========================================================
-// RAMADAN PROGRESS
-// ==========================================================
-function updateRamadanProgress(now) {
-    const ramaDayEl = document.getElementById('ramadanDay');
-    const progressLabel = document.getElementById('progressLabel');
-    const progressDay = document.getElementById('progressDay');
-    const progressFill = document.getElementById('progressFill');
-
-    if (now >= RAMADAN_START && now < RAMADAN_END) {
-        const dayNum = Math.floor((now - RAMADAN_START) / 86400000) + 1;
-        const totalDays = Math.floor((RAMADAN_END - RAMADAN_START) / 86400000);
-        const pct = Math.min(100, (dayNum / totalDays) * 100);
-
-        ramaDayEl.textContent = `${dayNum}. Gün`;
-        progressLabel.textContent = 'Ramazan İlerlemesi';
-        progressDay.textContent = `${dayNum} / ${totalDays}`;
-        progressFill.style.width = pct + '%';
-
-        const kadir = now.getDate() === KADIR_NIGHT_DATE.getDate() && now.getMonth() === KADIR_NIGHT_DATE.getMonth();
-        if (kadir) {
-            ramaDayEl.textContent = `${dayNum}. Gün ✨ Kadir Gecesi`;
-        }
-    } else if (now < RAMADAN_START) {
-        const daysLeft = Math.ceil((RAMADAN_START - now) / 86400000);
-        ramaDayEl.textContent = `Ramazan'a ${daysLeft} gün`;
-        progressLabel.textContent = 'Ramazan Bekleniyor';
-        progressDay.textContent = `${daysLeft} gün kaldı`;
-        progressFill.style.width = '0%';
-    } else if (now >= RAMADAN_END && now < BAYRAM_END) {
-        ramaDayEl.textContent = 'Bayram Mübarek! 🎉';
-        progressLabel.textContent = 'Ramazan Bayramı (20-22 Mart)';
-        progressDay.textContent = '30 / 30';
-        progressFill.style.width = '100%';
-    } else {
-        ramaDayEl.textContent = 'Ramazan Tamamlandı';
-        progressLabel.textContent = 'Ramazan 2026 Sona Erdi';
-        progressDay.textContent = '30 / 30';
-        progressFill.style.width = '100%';
-    }
-}
-
-// ==========================================================
-// FASTING DURATION
-// ==========================================================
-function updateFastingDuration(today) {
-    const bar = document.getElementById('fastingBar');
-    const dur = document.getElementById('fastingDuration');
-    const fill = document.getElementById('fastingFill');
-    const startEl = document.getElementById('fastingStart');
-    const endEl = document.getElementById('fastingEnd');
-    const pctEl = document.getElementById('fastingPct');
-    const ringEl = document.getElementById('fastingRing');
-
-    if (!today.fajr || !today.maghrib) { bar.style.display = 'none'; return; }
-    bar.style.display = 'block';
-
-    const [fH, fM] = today.fajr.split(':').map(Number);
-    const [mH, mM] = today.maghrib.split(':').map(Number);
-    const fastMins = (mH * 60 + mM) - (fH * 60 + fM);
-    const hours = Math.floor(fastMins / 60);
-    const mins = fastMins % 60;
-    dur.textContent = `${hours} saat ${mins} dk`;
-    startEl.textContent = today.fajr;
-    endEl.textContent = today.maghrib;
-
-    const now = new Date();
-    const nowMin = now.getHours() * 60 + now.getMinutes();
-    const fStart = fH * 60 + fM;
-    const fEnd = mH * 60 + mM;
-    const circumference = 263.9; // 2 * PI * 42
-    let pct = 0;
-
-    if (nowMin >= fStart && nowMin <= fEnd) {
-        pct = Math.round(((nowMin - fStart) / (fEnd - fStart)) * 100);
-    } else if (nowMin > fEnd) {
-        pct = 100;
-    }
-
-    if (fill) fill.style.width = pct + '%';
-    if (pctEl) pctEl.textContent = `%${pct}`;
-    if (ringEl) {
-        const offset = circumference - (circumference * pct / 100);
-        ringEl.style.strokeDashoffset = offset;
-    }
+    // Progress: from Jan 1 2026 to June 26 2026
+    const totalDays = Math.ceil((kurban - YEAR_START) / 86400000);
+    const elapsedDays = Math.ceil((today - YEAR_START) / 86400000);
+    const pct = Math.min(100, Math.max(0, (elapsedDays / totalDays) * 100));
+    if (progressEl) progressEl.style.width = pct + '%';
 }
 
 // ==========================================================
@@ -344,12 +293,12 @@ function updateFastingDuration(today) {
 // ==========================================================
 function highlightActivePrayer(today, now) {
     const timesMap = [
-        { id: 'card-fajr', time: today.fajr },
-        { id: 'card-sun', time: today.sun },
-        { id: 'card-dhuhr', time: today.dhuhr },
-        { id: 'card-asr', time: today.asr },
-        { id: 'card-maghrib', time: today.maghrib },
-        { id: 'card-isha', time: today.isha }
+        { id: 'card-fajr', indId: 'ind-fajr', time: today.fajr },
+        { id: 'card-sun', indId: 'ind-sun', time: today.sun },
+        { id: 'card-dhuhr', indId: 'ind-dhuhr', time: today.dhuhr },
+        { id: 'card-asr', indId: 'ind-asr', time: today.asr },
+        { id: 'card-maghrib', indId: 'ind-maghrib', time: today.maghrib },
+        { id: 'card-isha', indId: 'ind-isha', time: today.isha }
     ];
 
     const nowMin = now.getHours() * 60 + now.getMinutes();
@@ -360,9 +309,27 @@ function highlightActivePrayer(today, now) {
         if (nowMin >= h * 60 + m) { activeIdx = i; break; }
     }
 
+    // Find next prayer index
+    let nextIdx = -1;
+    for (let i = 0; i < timesMap.length; i++) {
+        if (!timesMap[i].time) continue;
+        const [h, m] = timesMap[i].time.split(':').map(Number);
+        if (nowMin < h * 60 + m) { nextIdx = i; break; }
+    }
+
     timesMap.forEach((t, i) => {
         const el = document.getElementById(t.id);
-        if (el) el.classList.toggle('active', i === activeIdx);
+        const indEl = document.getElementById(t.indId);
+        if (el) {
+            el.classList.remove('active', 'next-prayer');
+            if (i === activeIdx) el.classList.add('active');
+            if (i === nextIdx) el.classList.add('next-prayer');
+        }
+        if (indEl) {
+            indEl.classList.remove('ind-active', 'ind-next');
+            if (i === activeIdx) indEl.classList.add('ind-active');
+            if (i === nextIdx) indEl.classList.add('ind-next');
+        }
     });
 }
 
@@ -389,8 +356,6 @@ function startCountdown(today, now) {
         { name: 'AKŞAM', key: 'maghrib', time: today.maghrib },
         { name: 'YATSI', key: 'isha', time: today.isha }
     ];
-
-    const isRamadan = now >= RAMADAN_START && now < RAMADAN_END;
 
     function tick() {
         const current = new Date();
@@ -439,15 +404,9 @@ function startCountdown(today, now) {
         cdMinutes.textContent = String(mi).padStart(2, '0');
         cdSeconds.textContent = String(s).padStart(2, '0');
 
-        let displayName = target.name;
-        if (isRamadan) {
-            if (target.name === 'AKŞAM') displayName = 'İFTAR';
-            if (target.name === 'İMSAK') displayName = 'SAHUR';
-        }
-
         const suffix = (selectedPrayer !== 'auto' && target.sec > 86400) ? ' (yarın)' : '';
-        nextPrayerName.textContent = displayName + ' VAKTİNE KALAN' + suffix;
-        nextPrayerTime.textContent = target.time;
+        nextPrayerName.textContent = target.name + ' VAKTİNE KALAN' + suffix;
+        nextPrayerTime.textContent = formatTime(target.time);
 
         const totalPrayerGap = findPrayerGap(prayerOrder, target, nowSec);
         const progress = 1 - (diff / totalPrayerGap);
@@ -485,18 +444,15 @@ function renderTable(days) {
         const d = prayerTimings[i];
         const dt = new Date(d.date);
         const isToday = d.date.startsWith(todayStr);
-        const dayOfRamadan = Math.floor((dt - RAMADAN_START) / 86400000) + 1;
-        const isKadir = dt.getDate() === KADIR_NIGHT_DATE.getDate() && dt.getMonth() === KADIR_NIGHT_DATE.getMonth();
 
         const tr = document.createElement('tr');
         if (isToday) tr.className = 'today-row';
-        if (isKadir) tr.classList.add('kadir-row');
 
         const dateLabel = `${dt.getDate()} ${monthsShort[dt.getMonth()]} ${daysShort[dt.getDay()]}`;
         tr.innerHTML = `
             <td>${isToday ? dateLabel + ' ★' : dateLabel}</td>
-            <td>${d.fajr}</td><td>${d.sun}</td><td>${d.dhuhr}</td>
-            <td>${d.asr}</td><td>${d.maghrib}</td><td>${d.isha}</td>
+            <td>${formatTime(d.fajr)}</td><td>${formatTime(d.sun)}</td><td>${formatTime(d.dhuhr)}</td>
+            <td>${formatTime(d.asr)}</td><td>${formatTime(d.maghrib)}</td><td>${formatTime(d.isha)}</td>
         `;
         prayerTableBody.appendChild(tr);
     }
@@ -750,7 +706,6 @@ function initHatim() {
             if (state.completed.includes(i)) {
                 cell.classList.add('done');
             } else {
-                // Find first incomplete as "current"
                 const firstIncomplete = Array.from({ length: 30 }, (_, k) => k + 1).find(n => !state.completed.includes(n));
                 if (i === firstIncomplete) cell.classList.add('current');
             }
@@ -790,44 +745,6 @@ function initHatim() {
 }
 
 // ==========================================================
-// JOURNAL (Ramazan Günlüğü)
-// ==========================================================
-function initJournal() {
-    const textarea = document.getElementById('journalText');
-    const dateLabel = document.getElementById('journalDateLabel');
-    const saveBtn = document.getElementById('journalSave');
-    const savedMsg = document.getElementById('journalSavedMsg');
-    let viewDate = new Date();
-
-    function getKey(dt) { return `journal_${dateKey(dt)}`; }
-
-    function render() {
-        dateLabel.textContent = formatDateLabel(viewDate);
-        const saved = localStorage.getItem(getKey(viewDate));
-        textarea.value = saved || '';
-        savedMsg.classList.remove('show');
-    }
-
-    saveBtn.addEventListener('click', () => {
-        localStorage.setItem(getKey(viewDate), textarea.value);
-        savedMsg.classList.add('show');
-        setTimeout(() => savedMsg.classList.remove('show'), 2000);
-        checkAchievements();
-    });
-
-    document.getElementById('journalPrevDay').addEventListener('click', () => {
-        viewDate = new Date(viewDate.getTime() - 86400000);
-        render();
-    });
-    document.getElementById('journalNextDay').addEventListener('click', () => {
-        viewDate = new Date(viewDate.getTime() + 86400000);
-        render();
-    });
-
-    render();
-}
-
-// ==========================================================
 // ACHIEVEMENTS (Başarımlar)
 // ==========================================================
 function initAchievements() {
@@ -850,13 +767,11 @@ function initAchievements() {
 }
 
 function getAchievementStats() {
-    // Total worship days
     let totalWorshipDays = 0;
     let streak = 0;
     let hasFullDay = false;
     const today = new Date();
 
-    // Check last 30 days backwards for streak
     let currentStreak = 0;
     for (let i = 0; i < 30; i++) {
         const dt = new Date(today.getTime() - i * 86400000);
@@ -873,32 +788,20 @@ function getAchievementStats() {
     }
     streak = currentStreak;
 
-    // Hatim
     const hatimSaved = localStorage.getItem('hatim_progress');
     const hatimDone = hatimSaved ? JSON.parse(hatimSaved).completed.length : 0;
 
-    // Journal
-    let journalDays = 0;
-    for (let i = 0; i < 30; i++) {
-        const dt = new Date(today.getTime() - i * 86400000);
-        const saved = localStorage.getItem(`journal_${dateKey(dt)}`);
-        if (saved && saved.trim().length > 0) journalDays++;
-    }
-
-    // Tesbih completions
     const tesbihComplete = parseInt(localStorage.getItem('tesbihCompletions') || '0');
 
-    return { totalWorshipDays, streak, hasFullDay, hatimDone, journalDays, tesbihComplete };
+    return { totalWorshipDays, streak, hasFullDay, hatimDone, tesbihComplete };
 }
 
 function checkAchievements() {
     const stats = getAchievementStats();
 
-    // Update streak display
     const streakEl = document.getElementById('streakCount');
     if (streakEl) streakEl.textContent = stats.streak;
 
-    // Check badges
     const unlocked = JSON.parse(localStorage.getItem('achievements_unlocked') || '[]');
 
     BADGE_DEFS.forEach(badge => {
@@ -954,10 +857,10 @@ function initShare() {
         const today = prayerTimings.find(d => d.date && d.date.startsWith(todayStr)) || prayerTimings[0];
         if (!today) return;
 
-        const text = `🌙 ${currentCity} - Namaz Vakitleri\n📅 ${document.getElementById('gregorianDate').textContent}\n\n🕌 İmsak: ${today.fajr}\n🌅 Güneş: ${today.sun}\n🕐 Öğle: ${today.dhuhr}\n🕑 İkindi: ${today.asr}\n🌇 Akşam: ${today.maghrib}\n🌙 Yatsı: ${today.isha}\n\n📱 Kaynak: Diyanet İşleri Başkanlığı`;
+        const text = `🕌 ${currentCity} - Namaz Vakitleri\n📅 ${document.getElementById('gregorianDate').textContent}\n\n⏰ İmsak: ${formatTime(today.fajr)}\n🌅 Güneş: ${formatTime(today.sun)}\n🕐 Öğle: ${formatTime(today.dhuhr)}\n🕑 İkindi: ${formatTime(today.asr)}\n🌇 Akşam: ${formatTime(today.maghrib)}\n🌙 Yatsı: ${formatTime(today.isha)}\n\n📱 Kaynak: Ezan Vakti Pro — Diyanet İşleri Başkanlığı`;
 
         if (navigator.share) {
-            try { await navigator.share({ title: 'Namaz Vakitleri', text }); } catch (e) { }
+            try { await navigator.share({ title: 'Ezan Vakti Pro — Namaz Vakitleri', text }); } catch (e) { }
         } else {
             try {
                 await navigator.clipboard.writeText(text);
@@ -998,10 +901,10 @@ window.addEventListener('DOMContentLoaded', () => {
     initTesbih();
     initWorship();
     initHatim();
-    initJournal();
     initAchievements();
     initShare();
     initPrint();
+    initNotifications();
     if (typeof initGame === 'function') initGame();
 
     const qiblaUpdate = initQibla();
@@ -1022,10 +925,134 @@ window.addEventListener('DOMContentLoaded', () => {
             cdSelector.querySelectorAll('.cd-pill').forEach(p => p.classList.remove('active'));
             pill.classList.add('active');
             selectedPrayer = pill.dataset.prayer;
-            // Re-render with new selection
             if (prayerTimings) updateDisplay();
         });
     }
 
     fetchPrayerTimes(currentCity);
 });
+
+// ==========================================================
+// NOTIFICATIONS
+// ==========================================================
+let notifEnabled = localStorage.getItem('notifEnabled') === 'true';
+
+function initNotifications() {
+    const btn = document.getElementById('notifBtn');
+    const icon = document.getElementById('notifIcon');
+    if (!btn || !icon) return;
+
+    function updateIcon() {
+        if (notifEnabled) {
+            icon.className = 'ri-notification-3-line';
+            icon.style.color = 'var(--accent)';
+        } else {
+            icon.className = 'ri-notification-off-line';
+            icon.style.removeProperty('color');
+        }
+    }
+
+    btn.addEventListener('click', async () => {
+        if (!notifEnabled) {
+            if (!('Notification' in window)) {
+                alert('Tarayıcınız bildirimleri desteklemiyor.');
+                return;
+            }
+            if (Notification.permission === 'granted') {
+                notifEnabled = true;
+                localStorage.setItem('notifEnabled', 'true');
+                scheduleNotifications();
+                updateIcon();
+            } else if (Notification.permission !== 'denied') {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    notifEnabled = true;
+                    localStorage.setItem('notifEnabled', 'true');
+                    scheduleNotifications();
+                    updateIcon();
+                } else {
+                    alert('Bildirim izni verilmedi.');
+                }
+            } else {
+                alert('Bildirim izni engellenmiş. Lütfen tarayıcı ayarlarından izin verin.');
+            }
+        } else {
+            notifEnabled = false;
+            localStorage.setItem('notifEnabled', 'false');
+            updateIcon();
+        }
+    });
+
+    updateIcon();
+    
+    // Background alarm fallback for foreground app
+    setInterval(() => {
+        if (!notifEnabled || !prayerTimings) return;
+        const now = new Date();
+        const sec = now.getSeconds();
+        if (sec !== 0) return;
+        
+        const todayStr = dateKey(now);
+        const today = prayerTimings.find(d => d.date && d.date.startsWith(todayStr));
+        if (!today) return;
+        
+        const hm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        
+        const prayers = [
+            { name: 'İmsak', time: formatTime(today.fajr) },
+            { name: 'Öğle', time: formatTime(today.dhuhr) },
+            { name: 'İkindi', time: formatTime(today.asr) },
+            { name: 'Akşam', time: formatTime(today.maghrib) },
+            { name: 'Yatsı', time: formatTime(today.isha) }
+        ];
+        
+        for (let p of prayers) {
+            if (p.time === hm) {
+                const lastNotified = localStorage.getItem('lastNotifiedTime');
+                if (lastNotified !== hm) {
+                    showLocalNotification(p.name, p.time, currentCity);
+                    localStorage.setItem('lastNotifiedTime', hm);
+                }
+            }
+        }
+    }, 1000);
+}
+
+function showLocalNotification(prayerName, time, city) {
+    if (Notification.permission === 'granted') {
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(reg => {
+                reg.showNotification(`🕌 Ezan Vakti: ${prayerName}`, {
+                    body: `${city} için ${prayerName} vakti girdi (${time}).`,
+                    icon: 'icons/icon-192.png',
+                    badge: 'icons/icon-192.png',
+                    vibrate: [200, 100, 200, 100, 200],
+                    tag: 'prayer-notif-' + prayerName,
+                    renotify: true
+                });
+            });
+        } else {
+            new Notification(`🕌 Ezan Vakti: ${prayerName}`, {
+                body: `${city} için ${prayerName} vakti girdi (${time}).`,
+                icon: 'icons/icon-192.png'
+            });
+        }
+    }
+}
+
+function scheduleNotifications() {
+    if (!notifEnabled || !prayerTimings) return;
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        const now = new Date();
+        const todayStr = dateKey(now);
+        let startIdx = prayerTimings.findIndex(d => d.date && d.date.startsWith(todayStr));
+        if (startIdx < 0) startIdx = 0;
+        const days = prayerTimings.slice(startIdx, startIdx + 3);
+        
+        navigator.serviceWorker.controller.postMessage({
+            type: 'SCHEDULE_PRAYERS',
+            city: currentCity,
+            days: days
+        });
+    }
+}

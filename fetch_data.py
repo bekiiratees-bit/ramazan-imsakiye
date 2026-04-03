@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
-"""Fetch prayer times for all 81 Turkish cities and generate embedded_data.js"""
-import json, urllib.request, time, sys
+"""
+Ezan Vakti Pro - Diyanet Namaz Vakitleri Çekme Scripti
+Diyanet API'sinden tüm 81 il için güncel vakitleri çeker
+Tarih aralığı: Bugünden itibaren 60 gün (Nisan - Haziran 2026)
+"""
+import json, urllib.request, time, sys, datetime
 
+# 81 il ve Diyanet location ID'leri (merkez ilçe)
 CITIES = {
     "Adana": 9146, "Adıyaman": 9158, "Afyonkarahisar": 9167, "Ağrı": 9185,
     "Aksaray": 9193, "Amasya": 9198, "Ankara": 9206, "Antalya": 9225,
     "Ardahan": 9238, "Artvin": 9246, "Aydın": 9252, "Balıkesir": 9270,
     "Bartın": 9285, "Batman": 9288, "Bayburt": 9295, "Bilecik": 9297,
-    "Bingöl": 9303, "Bitlis": 9311, "Bolu": 9319, "Burdur": 9327,
-    "Bursa": 9335, "Çanakkale": 9352, "Çankırı": 9359, "Çorum": 9366,
+    "Bingöl": 9303, "Bitlis": 9311, "Bolu": 9315, "Burdur": 9327,
+    "Bursa": 9335, "Çanakkale": 9352, "Çankırı": 9359, "Çorum": 9370,
     "Denizli": 9381, "Diyarbakır": 9392, "Düzce": 9403, "Edirne": 9407,
     "Elazığ": 9432, "Erzincan": 9440, "Erzurum": 9452, "Eskişehir": 9470,
     "Gaziantep": 9479, "Giresun": 9494, "Gümüşhane": 9501, "Hakkari": 9507,
@@ -26,28 +31,73 @@ CITIES = {
     "Zonguldak": 9935
 }
 
-API = "https://prayertimes.api.abdus.dev/api/diyanet/prayertimes?location_id="
+# Diyanet API URL'i
+API_BASE = "https://prayertimes.api.abdus.dev/api/diyanet/prayertimes?location_id="
+
 all_data = {}
 total = len(CITIES)
+failed = []
+
+print(f"=== Ezan Vakti Pro - Diyanet Veri Çekme ===")
+print(f"Toplam {total} il için istek gönderilecek...")
+print()
 
 for i, (city, cid) in enumerate(CITIES.items(), 1):
-    print(f"[{i}/{total}] {city}...", end=" ", flush=True)
-    try:
-        req = urllib.request.Request(API + str(cid))
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            data = json.loads(resp.read().decode())
-            all_data[city] = data
-            print(f"OK ({len(data)} days)")
-    except Exception as e:
-        print(f"FAIL: {e}")
-    time.sleep(0.2)
+    url = API_BASE + str(cid)
+    print(f"[{i:2d}/{total}] {city:<20} ...", end=" ", flush=True)
+    
+    success = False
+    for attempt in range(3):  # 3 deneme
+        try:
+            req = urllib.request.Request(
+                url,
+                headers={"User-Agent": "Mozilla/5.0 EzanVaktiPro/1.0"}
+            )
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                data = json.loads(resp.read().decode())
+                
+                # Filter to include today onward (from April 2026)
+                today = datetime.date.today()
+                filtered = [d for d in data if d.get("date", "")[:10] >= str(today)]
+                
+                if filtered:
+                    all_data[city] = filtered
+                    print(f"OK ({len(filtered)} günlük veri)")
+                else:
+                    # Use all data if filter yields nothing
+                    all_data[city] = data
+                    print(f"OK* (tüm {len(data)} gün)")
+                
+                success = True
+                break
+        except Exception as e:
+            if attempt < 2:
+                print(f"deneme {attempt+2}..", end=" ", flush=True)
+                time.sleep(1)
+            else:
+                print(f"HATA: {e}")
+                failed.append(city)
+    
+    if not success and city not in failed:
+        failed.append(city)
+    
+    time.sleep(0.15)  # Rate limit
 
-# Write JS file
+print()
+print(f"=== Tamamlandı ===")
+print(f"Başarılı: {len(all_data)}/{total}")
+if failed:
+    print(f"Başarısız: {failed}")
+
+# Dosyaya yaz
 outpath = "/Users/bekirates/.gemini/antigravity/scratch/ramazan-imsakiye/embedded_data.js"
 with open(outpath, "w", encoding="utf-8") as f:
-    f.write("// Diyanet prayer times - All 81 cities - Ramadan 2026\n")
+    f.write("// Ezan Vakti Pro - Diyanet İşleri Başkanlığı Namaz Vakitleri\n")
+    f.write("// Son güncelleme: " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M") + "\n")
     f.write("const EMBEDDED_DATA = ")
-    json.dump(all_data, f, ensure_ascii=False)
+    json.dump(all_data, f, ensure_ascii=False, separators=(',', ':'))
     f.write(";\n")
 
-print(f"\nDone! {len(all_data)}/{total} cities saved to embedded_data.js")
+import os
+size_kb = os.path.getsize(outpath) // 1024
+print(f"embedded_data.js güncellendi: {size_kb} KB, {len(all_data)} il")
