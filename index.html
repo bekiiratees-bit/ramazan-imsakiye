@@ -102,6 +102,13 @@
             <!-- ===== PAGE: HOME (Vakitler) ===== -->
             <div class="page active" id="page-home">
 
+                <!-- Daily Quote (Günün Ayeti/Hadisi) -->
+                <div id="dailyQuoteCard" class="daily-quote-card glass-card" style="display:none;">
+                    <span class="dq-label">Günün Paylaşımı</span>
+                    <p id="dqText" class="dq-text">...</p>
+                    <span id="dqSource" class="dq-source">...</span>
+                </div>
+
                 <!-- Top Row Grid (Date & Kurban) -->
                 <div class="top-row-grid">
                     <div class="date-card glass-card">
@@ -141,6 +148,11 @@
                         <button class="cd-pill" data-prayer="isha">Yatsı</button>
                     </div>
                     <div class="cd-header">
+                        <div class="progress-ring-container">
+                            <svg width="220" height="220" viewBox="0 0 220 220">
+                                <circle class="progress-ring-circle" stroke="var(--accent)" stroke-width="4" fill="transparent" r="98" cx="110" cy="110" stroke-dasharray="615.75" stroke-dashoffset="615.75"/>
+                            </svg>
+                        </div>
                         <span class="cd-icon"><i class="ri-timer-flash-line"></i></span>
                         <span id="nextPrayerName" class="cd-label">VERİ BULUNAMADI</span>
                     </div>

@@ -98,6 +98,48 @@ const KURBAN_BAYRAMI = KURBAN_BAYRAMI_START;
 const YEAR_START = new Date(2026, 0, 1);
 
 // --- ACHIEVEMENTS DEFINITION ---
+function initDailyQuote() {
+    const dqCard = document.getElementById('dailyQuoteCard');
+    const dqText = document.getElementById('dqText');
+    const dqSource = document.getElementById('dqSource');
+    if (!dqCard || !VERSES.length) return;
+
+    // Use date as seed for daily quote
+    const today = new Date();
+    const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    const idx = seed % VERSES.length;
+    const q = VERSES[idx];
+
+    dqText.textContent = q.tr;
+    dqSource.textContent = "— " + q.ref;
+    dqCard.style.display = 'block';
+}
+
+function showConfetti() {
+    const duration = 2 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+        const colors = ['#6366f1', '#a855f7', '#fbbf24', '#22c55e', '#ef4444'];
+        
+        // Create simple div-based particles if canvas confetti lib is not available
+        // Or just a visual flash
+        const flash = document.createElement('div');
+        flash.style.fixed = 'fixed';
+        flash.style.inset = '0';
+        flash.style.zIndex = '9999';
+        flash.style.pointerEvents = 'none';
+        flash.style.background = 'rgba(255,255,255,0.2)';
+        flash.style.transition = 'opacity 0.5s';
+        document.body.appendChild(flash);
+        setTimeout(() => { flash.style.opacity = '0'; setTimeout(() => flash.remove(), 500); }, 50);
+
+        if (Date.now() < end) {
+            requestAnimationFrame(frame);
+        }
+    }());
+}
+
 const BADGE_DEFS = [
     { id: 'first_worship', icon: '🕌', name: 'İlk İbadet', desc: 'İlk ibadeti kaydet', check: (s) => s.totalWorshipDays >= 1 },
     { id: 'streak_3', icon: '🔥', name: '3 Gün Seri', desc: '3 gün üst üste', check: (s) => s.streak >= 3 },
@@ -408,9 +450,17 @@ function startCountdown(today, now) {
         nextPrayerName.textContent = target.name + ' VAKTİNE KALAN' + suffix;
         nextPrayerTime.textContent = formatTime(target.time);
 
+        // Update Progress Ring
         const totalPrayerGap = findPrayerGap(prayerOrder, target, nowSec);
         const progress = 1 - (diff / totalPrayerGap);
-        ringProgress.style.width = (Math.max(0, progress) * 100) + '%';
+        const circle = document.querySelector('.progress-ring-circle');
+        if (circle) {
+            const radius = circle.r.baseVal.value;
+            const circumference = radius * 2 * Math.PI;
+            const offset = circumference - (Math.max(0, Math.min(1, progress)) * circumference);
+            circle.style.strokeDasharray = `${circumference} ${circumference}`;
+            circle.style.strokeDashoffset = offset;
+        }
     }
 
     tick();
@@ -419,11 +469,20 @@ function startCountdown(today, now) {
 
 function findPrayerGap(prayers, target, nowSec) {
     const idx = prayers.findIndex(p => p.name === target.name);
-    if (idx <= 0) return 3600;
+    // If it's İMSAK (first prayer), gap is from yesterday's YATSI to today's İMSAK
+    if (idx === 0) {
+        if (!prayers[idx].time || !prayers[5].time) return 8 * 3600; // Default 8 hours
+        const [ih, im] = prayers[0].time.split(':').map(Number);
+        const [yh, ym] = prayers[5].time.split(':').map(Number);
+        const imsakSec = ih * 3600 + im * 60;
+        const yatsiSec = yh * 3600 + ym * 60;
+        return (24 * 3600 - yatsiSec) + imsakSec;
+    }
     if (!prayers[idx - 1].time || !target.time) return 3600;
     const [ph, pm] = prayers[idx - 1].time.split(':').map(Number);
     const [th, tm] = target.time.split(':').map(Number);
-    return (th * 3600 + tm * 60) - (ph * 3600 + pm * 60) || 3600;
+    const gap = (th * 3600 + tm * 60) - (ph * 3600 + pm * 60);
+    return gap > 0 ? gap : 3600;
 }
 
 // ==========================================================
@@ -608,6 +667,7 @@ function initTesbih() {
         setTimeout(() => btn.classList.remove('pulse'), 300);
 
         if (count >= phases[phase].target) {
+            showConfetti(); // GOL! Konfeti patlat
             if (phase < phases.length - 1) {
                 phase++; count = 0;
             } else {
@@ -1073,6 +1133,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     fetchPrayerTimes(currentCity);
+    if (typeof initDailyQuote === 'function') initDailyQuote();
 });
 
 // ==========================================================
