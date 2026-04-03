@@ -17,7 +17,7 @@ const gameContainer = document.querySelector('.game-container');
 
 let level = parseInt(localStorage.getItem('aether_game_level') || '1');
 let score = parseInt(localStorage.getItem('aether_game_score') || '0');
-let size = 4;
+let size = 3; // Starts easy
 let nodes = [];
 let paths = {}; // { colorIndex: [ {r, c}, ... ] }
 let activeColor = null;
@@ -51,6 +51,17 @@ function initGame() {
         resizeCanvas();
     });
 
+    const btnReset = document.getElementById('btnReset');
+    if (btnReset) {
+        btnReset.addEventListener('click', () => {
+            if (isPlaying) {
+                // Clear all paths but keep nodes
+                Object.keys(paths).forEach(id => paths[id] = []);
+                draw();
+            }
+        });
+    }
+
     window.addEventListener('resize', resizeCanvas);
     
     // Interaction
@@ -75,8 +86,12 @@ function initGame() {
 
 function startGame() {
     isPlaying = true;
-    size = 4 + Math.floor(level / 100);
-    size = Math.min(size, 10);
+    // Step-by-step difficulty
+    if (level < 20) size = 3;
+    else if (level < 100) size = 4;
+    else if (level < 250) size = 5;
+    else if (level < 500) size = 6;
+    else size = Math.min(8, 7 + Math.floor(level / 200));
     
     generateLevel();
     resizeCanvas();
@@ -88,9 +103,9 @@ function generateLevel() {
     gameGrid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
     gameGrid.style.gridTemplateRows = `repeat(${size}, 1fr)`;
 
-    // Simple Procedural Generation (In a real pro app, we'd have a level database)
-    // For now, let's create random pairs based on level difficulty
-    const nodeCount = 3 + Math.floor(level / 200);
+    // Simple Procedural Generation
+    // Level 1-10: only 2 pairs. Level 11+: more pairs.
+    const nodeCount = (level <= 10) ? 2 : (level <= 50 ? 3 : 3 + Math.floor(level / 200));
     const usedCells = new Set();
     nodes = [];
     paths = {};
@@ -263,13 +278,7 @@ function checkWin() {
     });
 
     if (allConnected) {
-        // Check if full grid is used
-        const usedCells = new Set();
-        colorIds.forEach(id => paths[id].forEach(p => usedCells.add(`${p.r},${p.c}`)));
-        
-        if (usedCells.size === size * size) {
-            winLevel();
-        }
+        winLevel();
     }
 }
 
