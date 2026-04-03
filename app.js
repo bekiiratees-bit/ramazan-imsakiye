@@ -551,39 +551,51 @@ function initQibla() {
 // TESBIH
 // ==========================================================
 function initTesbih() {
-    const phases = [
+    const basePhases = [
         { ar: 'سُبْحَانَ اللَّهِ', tr: 'SubhanAllah', target: 33 },
         { ar: 'الْحَمْدُ لِلَّهِ', tr: 'Elhamdulillah', target: 33 },
         { ar: 'اللَّهُ أَكْبَرُ', tr: 'Allahuekber', target: 33 }
     ];
+    let customPhases = JSON.parse(localStorage.getItem('custom_zikirs') || '[]');
+    let phases = [...basePhases, ...customPhases];
 
     let phase = parseInt(localStorage.getItem('tesbihPhase') || '0');
     let count = parseInt(localStorage.getItem('tesbihCount') || '0');
     let completions = parseInt(localStorage.getItem('tesbihCompletions') || '0');
+    if (phase >= phases.length) phase = 0;
+
     const btn = document.getElementById('tesbihBtn');
     const countEl = document.getElementById('tesbihCount');
     const targetEl = document.getElementById('tesbihTarget');
     const labelEl = document.getElementById('tesbihLabel');
     const labelTrEl = document.getElementById('tesbihLabelTr');
     const progressEl = document.getElementById('tesbihProgress');
-    const stepEls = document.querySelectorAll('.step');
+    const stepsDiv = document.getElementById('tesbihSteps');
     const circumference = 2 * Math.PI * 70;
+
+    function renderSteps() {
+        if (!stepsDiv) return;
+        stepsDiv.innerHTML = '';
+        phases.forEach((p, i) => {
+            const step = document.createElement('span');
+            step.className = 'step' + (i === phase ? ' active' : '') + (i < phase ? ' done' : '');
+            step.dataset.idx = i;
+            step.textContent = p.tr;
+            stepsDiv.appendChild(step);
+        });
+    }
 
     function updateUI() {
         const p = phases[phase];
         countEl.textContent = count;
         targetEl.textContent = `/ ${p.target}`;
-        labelEl.textContent = p.ar;
+        labelEl.textContent = p.ar || '• • •';
         labelTrEl.textContent = p.tr;
 
         const offset = circumference - (count / p.target) * circumference;
         progressEl.setAttribute('stroke-dashoffset', Math.max(0, offset));
 
-        stepEls.forEach((s, i) => {
-            s.classList.remove('active', 'done');
-            if (i < phase) s.classList.add('done');
-            if (i === phase) s.classList.add('active');
-        });
+        renderSteps();
 
         localStorage.setItem('tesbihPhase', phase);
         localStorage.setItem('tesbihCount', count);
@@ -610,8 +622,78 @@ function initTesbih() {
         phase = 0; count = 0; updateUI();
     });
 
+    const addBtn = document.getElementById('addCustomZikirBtn');
+    if (addBtn) {
+        addBtn.addEventListener('click', () => {
+            const name = document.getElementById('customZikirName').value.trim();
+            const targetVal = parseInt(document.getElementById('customZikirTarget').value);
+            if(name && targetVal > 0) {
+                customPhases.push({ ar: '', tr: name, target: targetVal });
+                localStorage.setItem('custom_zikirs', JSON.stringify(customPhases));
+                phases = [...basePhases, ...customPhases];
+                document.getElementById('customZikirName').value = '';
+                document.getElementById('customZikirTarget').value = '';
+                updateUI();
+            }
+        });
+    }
+
     progressEl.setAttribute('stroke-dasharray', circumference);
     updateUI();
+}
+
+// ==========================================================
+// KAZA NAMAZI (Missed Prayers)
+// ==========================================================
+function initKazaTracker() {
+    const grid = document.getElementById('kazaGrid');
+    if (!grid) return;
+    const kazaList = [
+        { id: 'fajr', name: 'Sabah' },
+        { id: 'dhuhr', name: 'Öğle' },
+        { id: 'asr', name: 'İkindi' },
+        { id: 'maghrib', name: 'Akşam' },
+        { id: 'isha', name: 'Yatsı' },
+        { id: 'witr', name: 'Vitir' }
+    ];
+    
+    function loadKaza() { return JSON.parse(localStorage.getItem('kaza_tracker') || '{}'); }
+    function saveKaza(state) { localStorage.setItem('kaza_tracker', JSON.stringify(state)); }
+    
+    function render() {
+        const state = loadKaza();
+        grid.innerHTML = '';
+        kazaList.forEach(k => {
+            const count = state[k.id] || 0;
+            const row = document.createElement('div');
+            row.className = 'kaza-row';
+            row.innerHTML = `
+                <span class="kaza-name">${k.name}</span>
+                <div class="kaza-actions">
+                    <button class="btn-kaza minus" data-id="${k.id}">-</button>
+                    <span class="kaza-count">${count}</span>
+                    <button class="btn-kaza plus" data-id="${k.id}">+</button>
+                </div>
+            `;
+            grid.appendChild(row);
+        });
+    }
+    
+    grid.addEventListener('click', (e) => {
+        const btn = e.target.closest('.btn-kaza');
+        if (!btn) return;
+        const id = btn.dataset.id;
+        const isPlus = btn.classList.contains('plus');
+        const state = loadKaza();
+        let val = state[id] || 0;
+        if (isPlus) val++; else val--;
+        if (val < 0) val = 0;
+        state[id] = val;
+        saveKaza(state);
+        render();
+    });
+    
+    render();
 }
 
 // ==========================================================
@@ -827,23 +909,41 @@ function checkAchievements() {
 // ==========================================================
 // THEME
 // ==========================================================
+function applyTheme(theme) {
+    if (theme === 'auto') {
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    } else {
+        document.documentElement.setAttribute('data-theme', theme);
+    }
+}
+
 function initTheme() {
-    const saved = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', saved);
+    const saved = localStorage.getItem('theme') || 'auto';
+    applyTheme(saved);
     updateThemeIcon(saved);
 
     document.getElementById('themeToggle').addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme');
-        const next = current === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
+        const current = localStorage.getItem('theme') || 'auto';
+        let next = 'dark';
+        if (current === 'dark') next = 'light';
+        else if (current === 'light') next = 'auto';
+        
         localStorage.setItem('theme', next);
+        applyTheme(next);
         updateThemeIcon(next);
+    });
+
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if ((localStorage.getItem('theme') || 'auto') === 'auto') applyTheme('auto');
     });
 }
 
 function updateThemeIcon(theme) {
     const icon = document.getElementById('themeIcon');
-    icon.className = theme === 'dark' ? 'ri-sun-line' : 'ri-moon-clear-line';
+    if (theme === 'dark') icon.className = 'ri-moon-line';
+    else if (theme === 'light') icon.className = 'ri-sun-line';
+    else icon.className = 'ri-contrast-line';
 }
 
 // ==========================================================
@@ -890,16 +990,59 @@ function initPrint() {
 }
 
 // ==========================================================
+// GEOLOCATION
+// ==========================================================
+function initGeolocation() {
+    const btn = document.getElementById('btnGeoLoc');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+        if (!navigator.geolocation) {
+            alert('Tarayıcınız konum servisini desteklemiyor.');
+            return;
+        }
+        btn.classList.add('pulse');
+        navigator.geolocation.getCurrentPosition((pos) => {
+            btn.classList.remove('pulse');
+            const lat = pos.coords.latitude;
+            const lon = pos.coords.longitude;
+            let closestCity = currentCity;
+            let minDist = Infinity;
+            
+            for (const city in CITY_COORDS) {
+                const cLat = CITY_COORDS[city][0];
+                const cLon = CITY_COORDS[city][1];
+                const dist = Math.pow(lat - cLat, 2) + Math.pow(lon - cLon, 2);
+                if (dist < minDist) {
+                    minDist = dist;
+                    closestCity = city;
+                }
+            }
+            
+            if (citySelect.value !== closestCity) {
+                citySelect.value = closestCity;
+                citySelect.dispatchEvent(new Event('change'));
+                alert(`Konumunuza en yakın şehir seçildi: ${closestCity}`);
+            }
+        }, (err) => {
+            btn.classList.remove('pulse');
+            alert('Konum alınamadı. Lütfen izinleri kontrol edin.');
+        });
+    });
+}
+
+// ==========================================================
 // INIT
 // ==========================================================
 window.addEventListener('DOMContentLoaded', () => {
     initSplash();
     initCitySelector();
+    initGeolocation();
     initNav();
     initTabs();
     initTheme();
     initTesbih();
     initWorship();
+    initKazaTracker();
     initHatim();
     initAchievements();
     initShare();
@@ -937,6 +1080,26 @@ window.addEventListener('DOMContentLoaded', () => {
 // ==========================================================
 let notifEnabled = localStorage.getItem('notifEnabled') === 'true';
 
+function playAdhanBeep() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, ctx.currentTime);     // C5
+        osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.5); // E5
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 1.5);
+    } catch(e) {}
+}
+
 function initNotifications() {
     const btn = document.getElementById('notifBtn');
     const icon = document.getElementById('notifIcon');
@@ -963,6 +1126,7 @@ function initNotifications() {
                 localStorage.setItem('notifEnabled', 'true');
                 scheduleNotifications();
                 updateIcon();
+                playAdhanBeep(); // Audio Context'i aktifleştirmek için
             } else if (Notification.permission !== 'denied') {
                 const permission = await Notification.requestPermission();
                 if (permission === 'granted') {
@@ -970,6 +1134,7 @@ function initNotifications() {
                     localStorage.setItem('notifEnabled', 'true');
                     scheduleNotifications();
                     updateIcon();
+                    playAdhanBeep(); // Audio Context'i aktifleştirmek için
                 } else {
                     alert('Bildirim izni verilmedi.');
                 }
@@ -1012,6 +1177,7 @@ function initNotifications() {
                 if (lastNotified !== hm) {
                     showLocalNotification(p.name, p.time, currentCity);
                     localStorage.setItem('lastNotifiedTime', hm);
+                    playAdhanBeep();
                 }
             }
         }

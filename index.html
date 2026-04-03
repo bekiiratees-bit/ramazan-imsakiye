@@ -92,6 +92,7 @@
         <div class="city-select-wrap">
             <i class="ri-map-pin-fill"></i>
             <select id="citySelect" aria-label="Şehir Seçin"></select>
+            <button id="btnGeoLoc" class="icon-btn-sm" aria-label="Konumumu Bul" title="Konumumu Bul"><i class="ri-crosshair-2-line"></i></button>
             <i class="ri-arrow-down-s-line"></i>
         </div>
 
@@ -319,6 +320,14 @@
                     </div>
                 </div>
 
+                <!-- Missed Prayers Tracker -->
+                <div class="section-card glass-card">
+                    <div class="section-badge"><i class="ri-history-line"></i> KAZA NAMAZI ÇETELESİ</div>
+                    <div class="kaza-grid" id="kazaGrid">
+                        <!-- Kaza satırları JavaScript ile render edilecek -->
+                    </div>
+                </div>
+
                 <!-- Hatim Tracker -->
                 <div class="section-card glass-card">
                     <div class="section-badge"><i class="ri-book-3-line"></i> HATİM TAKİPÇİSİ</div>
@@ -397,11 +406,19 @@
                     <p class="tesbih-label amiri" id="tesbihLabel">سُبْحَانَ اللَّهِ</p>
                     <p class="tesbih-label-tr" id="tesbihLabelTr">SubhanAllah</p>
                     <button class="tesbih-btn" id="tesbihBtn">+</button>
-                    <div class="tesbih-steps">
+                    <div class="tesbih-steps" id="tesbihSteps">
                         <span class="step active" data-idx="0">SubhanAllah</span>
                         <span class="step" data-idx="1">Elhamdulillah</span>
                         <span class="step" data-idx="2">Allahuekber</span>
                     </div>
+                    
+                    <!-- Custom Dhikr Form -->
+                    <div class="custom-zikir-form">
+                        <input type="text" id="customZikirName" placeholder="Zikir Adı (Örn: Ya Şafi)" maxlength="30">
+                        <input type="number" id="customZikirTarget" placeholder="Hedef (Örn: 99)" min="1" max="9999">
+                        <button id="addCustomZikirBtn" class="btn-sm"><i class="ri-add-line"></i> Ekle</button>
+                    </div>
+
                     <button class="btn-reset-sm" id="tesbihReset"><i class="ri-restart-line"></i> Sıfırla</button>
                 </div>
             </div>
