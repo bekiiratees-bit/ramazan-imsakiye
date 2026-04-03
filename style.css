@@ -2087,68 +2087,68 @@ select {
 .dq-text { font-size: 14px; font-weight: 500; font-family: var(--font-ar); line-height: 1.6; color: var(--text); }
 .dq-source { font-size: 11px; color: var(--text-dim); margin-top: 6px; display: block; font-weight: 600; font-family: var(--font); }
 
-/* Progress Ring CSS */
-.progress-ring-wrapper {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 260px; height: 260px;
-    z-index: 0;
-    opacity: 0.15;
-    pointer-events: none;
+/* New Linear Progress Bar replacing the Ring */
+.cd-bar-wrap {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+    margin: 12px 0;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
 }
-.progress-ring {
-    width: 100%; height: 100%;
+[data-theme="light"] .cd-bar-wrap {
+    background: rgba(0,0,0,0.05);
 }
-.progress-ring-circle {
-    transition: stroke-dashoffset 0.5s ease;
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
+.cd-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width 1s linear;
 }
 
 /* ==========================================================
-   GAME: ZEKA KARELERİ (1000 LEVEL)
+   GAME: LABİRENT BULMACASI (1000 LEVEL)
    ========================================================== */
 .game-container {
     padding: 10px 0;
     text-align: center;
 }
-.game-hud {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-}
-.game-grid {
+.tile-maze {
     display: grid;
-    gap: 8px;
+    gap: 6px;
     margin: 20px auto;
     width: 100%;
-    max-width: 320px;
+    max-width: 340px;
     aspect-ratio: 1;
+    background: rgba(0,0,0,0.1);
+    padding: 10px;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+}
+[data-theme="light"] .tile-maze {
+    background: rgba(0,0,0,0.02);
 }
 .tile {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--surface);
     border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
 }
-[data-theme="light"] .tile {
-    background: #f1f5f9;
-    border-color: rgba(0,0,0,0.1);
-}
-.tile.active {
-    background: var(--accent);
-    box-shadow: 0 0 20px var(--accent);
-}
-.tile.wrong {
-    background: var(--error);
-    box-shadow: 0 0 20px var(--error);
-}
-.game-controls { margin-top: 20px; }
-.game-hint { font-size: 11px; color: var(--text-dim); margin-top: 10px; }
+.tile.wall { background: rgba(0,0,0,0.5); border: none; cursor: default; }
+.tile.visited { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
+.tile.current { background: var(--accent2); transform: scale(1.1); z-index: 2; box-shadow: 0 0 20px var(--accent2); }
+.tile.goal { background: #10b981; border-color: #10b981; color: white; animation: pulse 1s infinite; }
+
+.game-controls { margin-top: 15px; }
+.game-hint { font-size: 13px; color: var(--text-dim); margin-top: 10px; }
 .shake { animation: shake 0.4s ease-in-out; }
 @keyframes shake {
     0%, 100% { transform: translateX(0); }

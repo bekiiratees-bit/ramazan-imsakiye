@@ -1,5 +1,6 @@
 /**
- * ZEKA KARELERİ - 1000 Level logic game for Ezan Vakti Pro
+ * SAYI LABİRENTİ - 1000 Level Creative Logic Game
+ * Mekanik: Tüm beyaz kareleri tek bir seferde gezerek yeşil hedefe ulaş.
  */
 
 const gameGrid = document.getElementById('gameGrid');
@@ -9,28 +10,29 @@ const gameHighEl = document.getElementById('gameHigh');
 const gameHintEl = document.getElementById('gameHint');
 const startBtn = document.getElementById('startGameBtn');
 
-let level = parseInt(localStorage.getItem('zeka_game_level') || '1');
-let highScore = parseInt(localStorage.getItem('zeka_game_high') || '0');
+let level = parseInt(localStorage.getItem('maze_game_level') || '1');
+let highScore = parseInt(localStorage.getItem('maze_game_high') || '0');
 let score = 0;
-let sequence = [];
-let userSequence = [];
+let grid = [];
+let path = [];
+let currentPos = null;
+let goalPos = null;
 let isPlaying = false;
-let canClick = false;
 
 function initGame() {
     gameLevelEl.textContent = level;
     gameHighEl.textContent = highScore;
     
     startBtn.addEventListener('click', () => {
-        if (!isPlaying) startGame();
+        startGame();
     });
 }
 
 function startGame() {
     isPlaying = true;
-    score = 0;
+    score = (level - 1) * 100;
     updateHUD();
-    nextLevel();
+    generateMaze();
 }
 
 function updateHUD() {
@@ -39,111 +41,104 @@ function updateHUD() {
     gameHighEl.textContent = highScore;
 }
 
-function nextLevel() {
-    userSequence = [];
-    canClick = false;
-    
-    // Calculate difficulty
-    // Level 1-20: 2x2, sequence 2-4
-    // Level 21-100: 3x3, sequence 4-6
-    // Level 101-300: 4x4, sequence 6-8
-    // Level 301-1000: 5x5+, sequence 8+
-    
-    let gridDim = 2;
-    if (level > 300) gridDim = 5;
-    else if (level > 100) gridDim = 4;
-    else if (level > 20) gridDim = 3;
-    
-    renderGrid(gridDim);
-    
-    // Generate sequence
-    sequence = [];
-    const sequenceLength = 2 + Math.floor(level / 10) + Math.min(level, 5); 
-    const tileCount = gridDim * gridDim;
-    
-    for (let i = 0; i < sequenceLength; i++) {
-        sequence.push(Math.floor(Math.random() * tileCount));
-    }
-    
-    gameHintEl.textContent = "Dikkatle izle...";
-    playSequence();
-}
-
-function renderGrid(dim) {
-    gameGrid.style.gridTemplateColumns = `repeat(${dim}, 1fr)`;
+function generateMaze() {
     gameGrid.innerHTML = '';
-    for (let i = 0; i < dim * dim; i++) {
-        const tile = document.createElement('div');
-        tile.className = 'tile';
-        tile.dataset.idx = i;
-        tile.addEventListener('touchstart', onTileClick);
-        tile.addEventListener('click', onTileClick);
-        gameGrid.appendChild(tile);
-    }
-}
-
-async function playSequence() {
-    const tiles = gameGrid.querySelectorAll('.tile');
-    const delay = Math.max(200, 600 - (level * 2)); // Gets faster
+    path = [];
     
-    for (const idx of sequence) {
-        await new Promise(r => setTimeout(r, delay));
-        const tile = tiles[idx];
-        if (tile) {
-            tile.classList.add('active');
-            setTimeout(() => tile.classList.remove('active'), delay / 2);
+    // Grid size grows every 50 levels (min 3x3, max 7x7)
+    let size = 3 + Math.floor(level / 50);
+    size = Math.min(size, 7);
+    
+    gameGrid.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+    
+    const totalTiles = size * size;
+    const wallCount = Math.floor(totalTiles * 0.15); // 15% walls
+    
+    grid = [];
+    for (let i = 0; i < totalTiles; i++) {
+        grid.push({ type: 'empty', visited: false });
+    }
+    
+    // Add walls randomly (avoiding start and end roughly)
+    for (let i = 0; i < wallCount; i++) {
+        let r = Math.floor(Math.random() * totalTiles);
+        if (r !== 0 && r !== totalTiles - 1) {
+            grid[r].type = 'wall';
         }
-        await new Promise(r => setTimeout(r, delay / 2));
     }
     
-    canClick = true;
-    gameHintEl.textContent = "Şimdi senin sıran!";
+    // Set Start and Goal
+    currentPos = 0;
+    goalPos = totalTiles - 1;
+    grid[currentPos].type = 'start';
+    grid[goalPos].type = 'goal';
+    
+    renderGrid(size);
 }
 
-function onTileClick(e) {
-    e.preventDefault();
-    if (!canClick) return;
+function renderGrid(size) {
+    gameGrid.innerHTML = '';
+    grid.forEach((tile, i) => {
+        const div = document.createElement('div');
+        div.className = 'tile';
+        if (tile.type === 'wall') div.classList.add('wall');
+        if (tile.type === 'goal') {
+            div.classList.add('goal');
+            div.textContent = 'BİTİŞ';
+        }
+        if (i === currentPos) {
+            div.classList.add('current');
+            div.classList.add('visited');
+        }
+        
+        div.addEventListener('click', () => handleMove(i, size));
+        gameGrid.appendChild(div);
+    });
+}
+
+function handleMove(idx, size) {
+    if (!isPlaying) return;
     
-    const idx = parseInt(e.currentTarget.dataset.idx);
-    const expected = sequence[userSequence.length];
+    // Logic: Must be adjacent to currentPos and not a wall
+    const row = Math.floor(idx / size);
+    const col = idx % size;
+    const curRow = Math.floor(currentPos / size);
+    const curCol = currentPos % size;
     
-    const tile = e.currentTarget;
-    tile.classList.add('active');
-    setTimeout(() => tile.classList.remove('active'), 200);
+    const isAdjacent = (Math.abs(row - curRow) + Math.abs(col - curCol)) === 1;
     
-    if (idx === expected) {
-        userSequence.push(idx);
-        if (userSequence.length === sequence.length) {
-            // Level Complete
-            score += level * 10;
+    if (isAdjacent && grid[idx].type !== 'wall' && !grid[idx].visited) {
+        currentPos = idx;
+        grid[idx].visited = true;
+        renderGrid(size);
+        checkWin(size);
+    } else if (grid[idx].visited) {
+        // Simple backtrack logic or reset? Let's reset level on wrong move for challenge
+        gameHintEl.textContent = "Buraya zaten uğradın! Baştan başla.";
+        startGame();
+    }
+}
+
+function checkWin(size) {
+    if (currentPos === goalPos) {
+        // Check if all non-wall tiles are visited
+        const targetCount = grid.filter(t => t.type !== 'wall').length;
+        const visitedCount = grid.filter(t => t.visited).length;
+        
+        if (visitedCount === targetCount) {
             level++;
+            score += 100;
             if (score > highScore) highScore = score;
-            localStorage.setItem('zeka_game_level', level);
-            localStorage.setItem('zeka_game_high', highScore);
-            
-            canClick = false;
-            gameHintEl.textContent = "Harika! Bir sonraki seviye...";
-            setTimeout(nextLevel, 1000);
+            localStorage.setItem('maze_game_level', level);
+            localStorage.setItem('maze_game_high', highScore);
+            gameHintEl.textContent = "Tebrikler! Seviye Atladın.";
+            if (typeof showConfetti === 'function') showConfetti();
+            setTimeout(startGame, 1000);
+        } else {
+            gameHintEl.textContent = "Hala boş kareler var! Her yeri gezmelisin.";
+            startGame(); // Hardcore: reset if they reached goal without filling
         }
-    } else {
-        // Game Over
-        tile.classList.add('wrong');
-        gameGrid.classList.add('shake');
-        gameHintEl.textContent = "Yanlış kare! Seviye 1'den tekrar başla.";
-        
-        isPlaying = false;
-        canClick = false;
-        level = 1; // Restart from 1 as requested "every level gets harder" and it's a zeka game
-        localStorage.setItem('zeka_game_level', 1);
-        
-        setTimeout(() => {
-            gameGrid.classList.remove('shake');
-            tile.classList.remove('wrong');
-            updateHUD();
-        }, 1000);
     }
-    
-    updateHUD();
 }
 
 // Global initialization

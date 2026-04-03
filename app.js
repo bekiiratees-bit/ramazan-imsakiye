@@ -450,16 +450,12 @@ function startCountdown(today, now) {
         nextPrayerName.textContent = target.name + ' VAKTİNE KALAN' + suffix;
         nextPrayerTime.textContent = formatTime(target.time);
 
-        // Update Progress Ring
+        // Update Linear Progress Bar
         const totalPrayerGap = findPrayerGap(prayerOrder, target, nowSec);
-        const progress = 1 - (diff / totalPrayerGap);
-        const circle = document.querySelector('.progress-ring-circle');
-        if (circle) {
-            const radius = circle.r.baseVal.value;
-            const circumference = radius * 2 * Math.PI;
-            const offset = circumference - (Math.max(0, Math.min(1, progress)) * circumference);
-            circle.style.strokeDasharray = `${circumference} ${circumference}`;
-            circle.style.strokeDashoffset = offset;
+        const progress = (1 - (diff / totalPrayerGap)) * 100;
+        const barFill = document.getElementById('cdBarFill');
+        if (barFill) {
+            barFill.style.width = Math.max(0, Math.min(100, progress)) + '%';
         }
     }
 
