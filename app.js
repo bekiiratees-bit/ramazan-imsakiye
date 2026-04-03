@@ -1108,7 +1108,7 @@ window.addEventListener('DOMContentLoaded', () => {
     initShare();
     initPrint();
     initNotifications();
-    if (typeof initGame === 'function') initGame();
+    if (window.gameEngine) window.gameEngine.init();
 
     const qiblaUpdate = initQibla();
 

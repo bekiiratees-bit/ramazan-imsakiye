@@ -618,9 +618,17 @@ select {
 
 .cd-digits {
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 10px;
+    align-items: baseline;
+    gap: 8px;
+    margin: 15px 0;
+    position: relative;
+    z-index: 2;
+}
+
+[data-theme="light"] .countdown-card {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
 
 .cd-block {
@@ -628,13 +636,23 @@ select {
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--glass-border);
     border-radius: 14px;
     padding: 14px 18px 10px;
     min-width: 78px;
-    transition: border-color 0.3s;
+    transition: all 0.3s;
+    position: relative;
+    z-index: 2;
 }
+
+[data-theme="light"] .cd-block {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+
+
 
 .cd-block.accent-block {
     border-color: rgba(99, 102, 241, 0.35);
@@ -2070,18 +2088,72 @@ select {
 .dq-source { font-size: 11px; color: var(--text-dim); margin-top: 6px; display: block; font-weight: 600; font-family: var(--font); }
 
 /* Progress Ring CSS */
-.progress-ring-container {
+.progress-ring-wrapper {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 220px; height: 220px;
-    z-index: -1;
+    width: 260px; height: 260px;
+    z-index: 0;
     opacity: 0.15;
+    pointer-events: none;
+}
+.progress-ring {
+    width: 100%; height: 100%;
 }
 .progress-ring-circle {
-    transition: stroke-dashoffset 1s ease;
+    transition: stroke-dashoffset 0.5s ease;
     transform: rotate(-90deg);
     transform-origin: 50% 50%;
+}
+
+/* ==========================================================
+   GAME: ZEKA KARELERİ (1000 LEVEL)
+   ========================================================== */
+.game-container {
+    padding: 10px 0;
+    text-align: center;
+}
+.game-hud {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+}
+.game-grid {
+    display: grid;
+    gap: 8px;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 1;
+}
+.tile {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+}
+[data-theme="light"] .tile {
+    background: #f1f5f9;
+    border-color: rgba(0,0,0,0.1);
+}
+.tile.active {
+    background: var(--accent);
+    box-shadow: 0 0 20px var(--accent);
+}
+.tile.wrong {
+    background: var(--error);
+    box-shadow: 0 0 20px var(--error);
+}
+.game-controls { margin-top: 20px; }
+.game-hint { font-size: 11px; color: var(--text-dim); margin-top: 10px; }
+.shake { animation: shake 0.4s ease-in-out; }
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
 }
 [data-theme="light"] .daily-quote-card {
     background: #ffffff;
