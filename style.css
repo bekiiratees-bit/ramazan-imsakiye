@@ -2109,52 +2109,148 @@ select {
 }
 
 /* ==========================================================
-   GAME: LABİRENT BULMACASI (1000 LEVEL)
+   GAME: AETHER LINK (1000 LEVEL ARCADE)
    ========================================================== */
 .game-container {
     padding: 10px 0;
     text-align: center;
+    position: relative;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.tile-maze {
-    display: grid;
-    gap: 6px;
-    margin: 20px auto;
-    width: 100%;
-    max-width: 340px;
-    aspect-ratio: 1;
-    background: rgba(0,0,0,0.1);
-    padding: 10px;
-    border-radius: 16px;
-    border: 1px solid var(--glass-border);
+
+.game-hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
 }
-[data-theme="light"] .tile-maze {
-    background: rgba(0,0,0,0.02);
+
+.game-hud-btn-wrap {
+    display: flex;
+    gap: 8px;
 }
-.tile {
-    background: var(--surface);
-    border: 1px solid var(--glass-border);
-    border-radius: 10px;
+
+.game-btn-icon {
+    background: rgba(99, 102, 241, 0.15);
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s;
+}
+
+.game-btn-icon:hover {
+    background: var(--accent);
+    color: white;
+    box-shadow: 0 0 15px var(--accent);
+}
+
+.game-viewport {
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 360px;
+    aspect-ratio: 1;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 24px;
+    border: 2px solid var(--glass-border);
+    overflow: hidden;
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
+}
+
+.aether-grid {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0; left: 0;
+    z-index: 2;
+}
+
+.game-paths-canvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* Energy Nodes */
+.node-cell {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
-    font-weight: 700;
+    position: relative;
+    cursor: pointer;
 }
-.tile.wall { background: rgba(0,0,0,0.5); border: none; cursor: default; }
-.tile.visited { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 0 15px var(--accent); }
-.tile.current { background: var(--accent2); transform: scale(1.1); z-index: 2; box-shadow: 0 0 20px var(--accent2); }
-.tile.goal { background: #10b981; border-color: #10b981; color: white; animation: pulse 1s infinite; }
 
-.game-controls { margin-top: 15px; }
-.game-hint { font-size: 13px; color: var(--text-dim); margin-top: 10px; }
-.shake { animation: shake 0.4s ease-in-out; }
-@keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+.node-point {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    position: relative;
+    z-index: 5;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 15px currentColor;
 }
+
+.node-point::after {
+    content: '';
+    position: absolute;
+    top: -4px; right: -4px; bottom: -4px; left: -4px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    opacity: 0.3;
+    animation: nodePulse 2s infinite;
+}
+
+@keyframes nodePulse {
+    0% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.3); opacity: 0; }
+    100% { transform: scale(1); opacity: 0.5; }
+}
+
+/* Fullscreen Immersive Mode */
+.game-fullscreen {
+    position: fixed !important;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 9999;
+    background: #0f172a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    margin: 0 !important;
+}
+
+.game-fullscreen .game-viewport {
+    max-width: 90vmin;
+    max-height: 90vmin;
+    margin: 20px auto;
+}
+
+.game-fullscreen .game-hud {
+    position: absolute;
+    top: env(safe-area-inset-top, 20px);
+    left: 20px; right: 20px;
+}
+
+.game-fullscreen .game-controls {
+    position: absolute;
+    bottom: env(safe-area-inset-bottom, 20px);
+    left: 20px; right: 20px;
+}
+
 [data-theme="light"] .daily-quote-card {
     background: #ffffff;
     box-shadow: 0 4px 15px rgba(0,0,0,0.05);
