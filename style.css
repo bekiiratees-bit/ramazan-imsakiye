@@ -408,32 +408,26 @@ select {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 12px;
-    gap: 8px;
+    padding: 8px 12px;
+    gap: 4px;
     position: relative;
     overflow: hidden;
-}
-
-.date-icon {
-    font-size: 20px;
-    color: var(--accent);
-    opacity: 0.8;
 }
 
 .date-texts {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .date-gregorian {
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 15px;
+    font-weight: 700;
     line-height: 1.2;
 }
 
 .date-hijri {
-    font-size: 10px;
+    font-size: 12px;
     color: var(--text-dim);
     line-height: 1.2;
 }
@@ -441,16 +435,16 @@ select {
 /* Adjust kurban countdown to fit perfectly inside the grid cell */
 .top-row-grid .kurban-countdown {
     margin-bottom: 0 !important;
-    padding: 12px;
+    padding: 8px 12px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
 }
 
 .top-row-grid .kurban-header {
     margin-bottom: 0;
-    gap: 8px;
+    gap: 6px;
 }
 
 .top-row-grid .kurban-icon { font-size: 18px; }
@@ -1932,3 +1926,114 @@ select {
 .ts-sm { width: 36px; height: 20px; }
 .ts-sm .ts-slider:before { height: 14px; width: 14px; left: 3px; bottom: 3px; }
 .ts-sm input:checked + .ts-slider:before { transform: translateX(16px); }
+
+/* ==========================================================
+   LIGHT THEME OVERRIDES (CONTRAST & VISIBILITY FIXES)
+   ========================================================== */
+[data-theme="light"] .glass-card {
+    background: #ffffff;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .prayer-list-item,
+[data-theme="light"] .kaza-row,
+[data-theme="light"] .kaza-total,
+[data-theme="light"] .custom-zikir-form,
+[data-theme="light"] .custom-zikir-item,
+[data-theme="light"] .game-scores,
+[data-theme="light"] .game-canvas-wrap {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .top-row-grid .kurban-countdown {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.05));
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="light"] .modal-content {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .modal-header,
+[data-theme="light"] .setting-row.sub-row {
+    border-bottom-color: rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .setting-row {
+    background: rgba(0,0,0,0.03);
+}
+
+[data-theme="light"] .ts-slider {
+    background-color: rgba(0,0,0,0.15);
+}
+
+[data-theme="light"] .ts-slider:before {
+    background-color: #ffffff;
+}
+
+[data-theme="light"] .bottom-nav {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .nav-item {
+    color: var(--text-dim);
+}
+
+[data-theme="light"] .cd-selector {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .cd-header,
+[data-theme="light"] .qibla-card,
+[data-theme="light"] .compass-wrap {
+    border-color: rgba(0,0,0,0.1);
+}
+
+[data-theme="light"] .compass-wrap {
+    background: #ffffff;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .tesbih-btn {
+    background: #ffffff;
+    border: 2px solid rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    color: var(--text);
+}
+
+[data-theme="light"] .tesbih-btn:active {
+    background: #f8fafc;
+}
+
+[data-theme="light"] .tesbih-reset {
+    background: #ffffff;
+    border-color: rgba(0,0,0,0.1);
+    color: var(--text);
+}
+
+[data-theme="light"] .table-wrapper th {
+    background: rgba(0,0,0,0.05);
+}
+
+[data-theme="light"] .table-wrapper td, 
+[data-theme="light"] .table-wrapper th {
+    border-bottom-color: rgba(0,0,0,0.05);
+}
+
+[data-theme="light"] .table-wrapper tr.today-row {
+    background: rgba(34, 197, 94, 0.1);
+}
+
+[data-theme="light"] .btn-kaza {
+    background: #f1f5f9;
+}
+
+[data-theme="light"] .custom-zikir-form input {
+    background: #f8fafc;
+    border: 1px solid rgba(0,0,0,0.1);
+    color: #000;
+}
